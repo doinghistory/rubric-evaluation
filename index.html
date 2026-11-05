@@ -342,7 +342,7 @@ button.project-delete-button:hover{background:#fff0f1;color:#8d1d25}
 <section id="app-view" class="hidden"><div class="work-shell"><aside class="side-nav"><div class="side-brand">▤ <span>ルーブリック評価</span></div><nav class="side-links" aria-label="メニュー"><button type="button" data-nav="home">⌂　ホーム</button><button type="button" data-nav="targets">♙　評価対象の登録</button><button type="button" data-nav="criteria">▦　ルーブリック登録</button><button type="button" data-nav="evaluate">✎　評価入力</button><button type="button" data-nav="results">☷　評価一覧</button><button type="button" data-nav="export">⇩　集計・CSV</button><button type="button" data-nav="settings">⚙　プロジェクト</button><button type="button" data-nav="staff" id="staff-nav" class="hidden">♙　教員管理</button></nav><div class="side-account"><div id="account"></div><button id="logout" type="button">ログアウト</button></div></aside><div class="work-main"><div class="work-topbar"><strong id="top-project-name">評価プロジェクト</strong><select id="top-project-select" aria-label="プロジェクトを選択"><option value="">プロジェクトを選択</option></select></div><div id="app-notice" class="notice hidden" role="status" aria-live="polite"></div>
 <div id="home-view" class="panel hidden"><h1>ホーム</h1><div class="home-actions"><button type="button" data-jump="evaluate">✎<strong>評価入力へ</strong></button><button type="button" data-jump="results">☷<strong>評価一覧</strong></button><button type="button" data-jump="export">⇩<strong>集計・CSV出力</strong></button></div><div class="home-grid"><div class="home-box"><h2>評価の進捗</h2><div id="home-progress"></div><div class="progress-track"><span id="home-progress-bar"></span></div></div><div class="home-box"><h2>最近の評価</h2><div id="home-recent"></div></div></div><div class="home-box"><h2>基本情報</h2><div class="home-stats" id="home-stats"></div></div></div><div id="staff-view" class="panel hidden">
 <h1>教員アカウント管理</h1><p class="muted">管理者専用。職員番号でログインする教員を追加・利用停止できます。</p>
-<div id="staff-service-message" class="notice">Supabaseの教員管理機能の公開が必要です。準備が完了すると、ここから登録できます。</div>
+<div id="staff-service-message" class="notice">「更新」でSupabaseとの接続を確認できます。</div>
 <div class="editor-grid staff-editor-grid">
 <div class="criterion-sidebar"><h2>教員一覧</h2><button class="secondary small" id="staff-reload" type="button">↻ 更新</button><div id="staff-list" class="staff-list muted">教員管理機能の接続を確認してください。</div></div>
 <div class="criterion-editor"><h2>教員の追加</h2><form id="staff-create-form">
@@ -460,7 +460,7 @@ function renderEvaluation(){
 
 function syncNav(tab){document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===tab));}
 function setTab(tab){if(state.tab==='evaluate'&&tab!=='evaluate'&&state.dirty&&!confirm('未保存の変更があります。保存せずに移動しますか？'))return false;state.tab=tab;showOnly('project-detail-view');document.body.classList.toggle('c2-mode',tab==='evaluate');for(const b of document.querySelectorAll('[data-tab]'))b.classList.toggle('active',b.dataset.tab===tab);for(const id of ['targets','criteria','evaluate','results'])$('tab-'+id).classList.toggle('hidden',id!==tab);if(tab==='results')renderResults();syncNav(tab);return true;}
-function navigate(tab){if(state.dirty&&state.tab==='evaluate'&&tab!=='evaluate'&&!confirm('未保存の変更があります。移動すると変更内容は失われます。'))return;if(tab==='export'){if(state.project)exportCsv();return;}if(tab==='settings'){document.body.classList.remove('c2-mode');showOnly('project-list-view');syncNav('settings');return;}if(tab==='staff'){if(state.profile?.role!=='admin'){notify('教員管理は管理者専用です。',true);return;}document.body.classList.remove('c2-mode');showOnly('staff-view');syncNav('staff');loadStaff();return;}if(tab==='home'){document.body.classList.remove('c2-mode');showOnly('home-view');renderHome();syncNav('home');return;}if(!state.project){showOnly('project-list-view');syncNav('settings');return;}setTab(tab);}
+function navigate(tab){if(state.dirty&&state.tab==='evaluate'&&tab!=='evaluate'&&!confirm('未保存の変更があります。移動すると変更内容は失われます。'))return;if(tab==='export'){if(state.project)exportCsv();return;}if(tab==='settings'){document.body.classList.remove('c2-mode');showOnly('project-list-view');syncNav('settings');return;}if(tab==='staff'){document.body.classList.remove('c2-mode');showOnly('staff-view');syncNav('staff');void loadStaff();return;}if(tab==='home'){document.body.classList.remove('c2-mode');showOnly('home-view');renderHome();syncNav('home');return;}if(!state.project){showOnly('project-list-view');syncNav('settings');return;}setTab(tab);}
 function resultsData(){
  const scoreByAssessment=new Map();
  for(const s of state.scores){if(!scoreByAssessment.has(s.assessment_id))scoreByAssessment.set(s.assessment_id,new Map());scoreByAssessment.get(s.assessment_id).set(s.criterion_id,Number(s.score));}
@@ -776,8 +776,9 @@ async function staffRequest(payload){
  return body;
 }
 async function loadStaff(){
- if(state.profile?.role!=='admin')return;
- $('staff-service-message').textContent='教員一覧を読み込んでいます…';
+ const status=$('staff-service-message');
+ status.textContent='接続を確認しています…（'+new Date().toLocaleTimeString('ja-JP')+'）';
+ if(state.profile?.role!=='admin'){status.textContent='このアカウントには管理者権限がありません。';return;}
  try{
   const data=await staffRequest({action:'list'});
   const list=data?.staff||[];
@@ -785,7 +786,9 @@ async function loadStaff(){
   $('staff-service-message').textContent='教員管理機能に接続しています。';
  }catch(err){$('staff-service-message').textContent='教員管理機能が利用できません：'+err.message;$('staff-list').textContent='一覧を読み込めませんでした。';}
 }
-$('staff-reload').addEventListener('click',loadStaff);
+$('staff-reload').addEventListener('click',async e=>{const button=e.currentTarget;button.disabled=true;try{await loadStaff();}finally{button.disabled=false;}});
+// Defensive delegated listener for environments where view content is dynamically shown.
+
 $('staff-create-form').addEventListener('submit',async e=>{
  e.preventDefault();if(state.profile?.role!=='admin')return;
  const employee_no=$('staff-number').value.trim(),display_name=$('staff-name').value.trim(),password=$('staff-password').value,role=$('staff-role').value;
