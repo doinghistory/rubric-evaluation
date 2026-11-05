@@ -10,6 +10,54 @@
 /* C-2 折りたたみルーブリック */
 .rubric-list{border:1px solid #dce2e9;border-radius:6px;overflow:hidden}.rubric-item{border-bottom:1px solid #dce2e9}.rubric-item:last-child{border:0}.rubric-row{display:flex;align-items:center;gap:14px;padding:13px 14px}.rubric-toggle{flex:1;min-width:0;display:flex;gap:10px;align-items:flex-start;background:transparent;border:0;color:#192d49;text-align:left;padding:0;min-height:0}.rubric-toggle:hover{background:transparent;color:#17385e}.rubric-summary{display:block;font-size:12px;font-weight:400;color:#687688;line-height:1.4;margin-top:4px}.rubric-picks{display:flex;gap:5px;flex:none}.rubric-picks button{min-width:49px;min-height:38px;padding:7px;background:white;color:#17385e;border:1px solid #bdc8d6;font-weight:700}.rubric-picks button.selected{background:#17385e;color:white;border-color:#17385e}.rubric-detail{background:#f7f8fa;border-top:1px solid #e0e6ed;padding:13px 14px}.rubric-detail-grid{display:grid;grid-template-columns:repeat(var(--count),minmax(0,1fr));gap:9px}.rubric-detail-option{min-height:110px;display:flex;flex-direction:column;gap:8px;text-align:left;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.5;font-size:13px;background:#fff;color:#192d49;border:1px solid #cdd6e1;padding:12px}.rubric-detail-option.selected{border:2px solid #1f7451;background:#e9f4ee}.rubric-level{font-weight:700;font-size:15px}.rubric-tools{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:20px 0 10px}#save-panel{position:sticky;bottom:8px;z-index:2;box-shadow:0 4px 16px #162c471c}#save-panel.saved{background:#edf8f0}#save-panel.dirty{background:#fff9ec}
 @media(max-width:700px){.rubric-row{flex-direction:column;align-items:stretch}.rubric-picks{justify-content:flex-end}.rubric-picks button{flex:1}.rubric-detail-grid{grid-template-columns:1fr}.rubric-detail-option{min-height:0}#save-panel{bottom:0}}
+
+/* C-2 reference palette: quiet white/gray workspace, compact navy header, restrained gold action */
+:root{color:#242b35;background:#f8f8f8}
+body{background:#f8f8f8;color:#242b35}
+header{background:#172d4d;border-bottom:0;padding:10px max(16px,calc((100vw - 1120px)/2));font-size:17px;min-height:42px}
+main{max-width:1120px;margin:18px auto;padding:0 16px 48px}
+.panel{border-color:#d7d9de;border-radius:5px;padding:18px 20px;margin-bottom:12px;background:#fff;box-shadow:none}
+h1{font-size:19px;margin-bottom:12px}h2{font-size:16px}
+.muted,.meta,.rubric-summary{color:#666d77}
+label{font-size:13px;color:#313843}
+input,select,textarea{border:1px solid #c8cbd2;border-radius:4px;color:#2c3440}
+button{border-radius:4px}
+.tabs{gap:4px;margin:0 0 10px;border-bottom:1px solid #dbdee4}
+.tabs button{border:0;border-radius:3px 3px 0 0;background:transparent;color:#3b4657;min-height:37px;padding:8px 14px}
+.tabs button.active{background:#172d4d;color:#fff}
+.tabs button:hover{background:#ecedf1}
+.tabs button.active:hover{background:#172d4d}
+#tab-evaluate{padding:16px 18px}
+#tab-evaluate .eval-heading h2{font-size:17px}
+#tab-evaluate .grid{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+.rubric-tools{margin:12px 0 7px}
+.rubric-list{border:1px solid #d3d5d9;border-radius:5px}
+.rubric-item{border-color:#d8dade}
+.rubric-row{padding:7px 10px;gap:10px}
+.rubric-toggle{color:#242a33;font-size:14px}
+.rubric-toggle:hover{color:#172d4d}
+.rubric-summary{font-size:11px;margin-top:2px;max-width:680px}
+.rubric-picks{gap:3px}
+.rubric-picks button{min-width:49px;min-height:29px;padding:4px 8px;font-size:13px;background:#fafafa;border:1px solid #c9cbd0;color:#263144}
+.rubric-picks button.selected{background:#172d4d;border-color:#172d4d;color:#fff}
+.rubric-detail{background:#f9f9fa;border-color:#dddee2;padding:9px 10px}
+.rubric-detail-grid{gap:5px}
+.rubric-detail-option{background:#fff;border-color:#d5d7dc;min-height:95px;padding:9px;font-size:12px;line-height:1.5}
+.rubric-detail-option.selected{background:#f5f5f6;border:2px solid #172d4d}
+.rubric-detail-option.selected .rubric-level{color:#172d4d}
+.rubric-level{font-size:13px}
+#evaluate-comment{min-height:54px}
+#save-panel{position:sticky;bottom:6px;background:#fff;border:1px solid #d3d5d9;box-shadow:0 2px 8px #0000000d;padding:10px 12px;justify-content:space-between;flex-direction:row-reverse;margin-top:10px}
+#save-panel.saved{background:#f5f8f6;border-color:#d4dfd7}
+#save-panel.dirty{background:#fff;border-color:#d1c5a6}
+#save-panel.failed{background:#fff8f8}
+#save-evaluation{background:#b99437;color:#fff;border-color:#a88932;min-width:158px;min-height:38px;padding:7px 14px}
+#save-evaluation:hover{background:#9e7d2c}
+.save-status{font-size:13px}
+.save-status.saved{color:#276343}
+.save-help{font-size:11px;margin:3px 0 0}
+.notice{background:#f8f8f8;border-left-color:#bd9c47}
+@media(max-width:700px){main{padding:0 9px}#tab-evaluate .grid{grid-template-columns:1fr}.rubric-row{align-items:stretch}.rubric-picks button{min-width:0}#save-panel{bottom:0}}
 </style>
 </head>
 <body>
