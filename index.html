@@ -270,6 +270,45 @@ body.c2-mode #project-detail-view>.project-context{display:none}
 .descriptor-disabled{background:#f7f7f7;opacity:.77}
 .descriptor-disabled .descriptor-main textarea{background:#f0f1f2}
 .descriptor-count{margin:10px 0 4px;color:#172e50;font-weight:700;font-size:12px}
+
+/* Results overview (A) -> teacher detail (B): navy/gold interface */
+#tab-results .results-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:17px}
+#tab-results .results-heading h1{margin:0 0 5px;font-size:20px}
+#tab-results .results-heading p{margin:0;font-size:12px}
+#results-csv{font-weight:700;white-space:nowrap}
+.results-filters{display:flex;align-items:end;gap:12px;flex-wrap:wrap;background:#fafafa;border:1px solid #dfe2e8;padding:13px 14px;border-radius:5px;margin-bottom:16px}
+.results-filters label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700;color:#263853}
+.results-filters input{min-width:240px;padding:8px 10px;height:38px}
+.results-filters select{min-width:140px;height:38px;padding:7px}
+#results-total{margin-left:auto;padding-bottom:8px;font-size:12px}
+.results-scroll{overflow-x:auto;max-width:100%}
+.results-table{width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap}
+.results-table th,.results-table td{border:1px solid #d9dee5;padding:12px 12px;text-align:center}
+.results-table thead th{background:#eef1f5;color:#152b4a;font-weight:700}
+.results-table tbody tr:nth-child(even){background:#fcfcfd}
+.results-table tbody tr:hover{background:#fffaf0}
+.results-table .results-name-col{text-align:left;min-width:124px}
+.results-target-link{background:transparent!important;color:#174d88!important;border:0!important;padding:0!important;font-weight:700;text-decoration:underline;text-underline-offset:3px;min-height:0;cursor:pointer;font-size:13px}
+.results-target-link:hover{color:#a0751a!important}
+.results-table .results-mean{background:#fff4d8;font-weight:700;color:#1e2d40}
+.results-table thead .results-mean{background:#f7e6b8}
+.results-number{font-variant-numeric:tabular-nums}
+.results-caption{font-size:11px;color:#687282;margin:11px 0 0}
+.results-detail-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.results-detail-nav{display:flex;gap:7px;margin-left:auto}
+.results-detail-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px;border-bottom:1px solid #e4e6ea;padding-bottom:13px}
+.results-detail-title h2{font-size:21px;margin:0}
+.results-total-score{display:flex;align-items:center;gap:10px}
+.results-total-score span{font-size:12px;color:#59697b}
+.results-total-score strong{font-size:21px;background:#fae9b9;color:#182e4e;border-radius:5px;padding:6px 13px}
+.results-detail-table tbody th{text-align:left;background:#f9fafb}
+.results-summary-row th,.results-summary-row td{font-weight:700;background:#fff7e5!important}
+.results-comments{margin-top:24px}
+.results-comments h3{font-size:15px;margin-bottom:12px;border-bottom:1px solid #dce0e6;padding-bottom:9px}
+.results-comment{border:1px solid #dce0e7;border-radius:5px;margin:9px 0;padding:12px 15px;background:#fdfdfd}
+.results-comment-top{display:flex;justify-content:space-between;gap:10px}
+.results-comment p{margin:9px 0 2px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}
+@media(max-width:740px){#tab-results .results-heading{align-items:stretch;flex-direction:column}.results-filters input{min-width:150px}.results-detail-title{align-items:flex-start;flex-direction:column}.results-detail-nav{margin-left:0}.results-table th,.results-table td{padding:9px 10px}}
 </style>
 </head>
 <body>
@@ -283,7 +322,14 @@ body.c2-mode #project-detail-view>.project-context{display:none}
 <div class="panel" id="tab-targets"><h1>評価対象の登録・管理</h1><div class="subpanel"><h2>新しい評価対象の登録</h2><form id="targets-form"><label for="target-names">対象名（複数登録は1行に1件）</label><div class="target-form-row"><textarea id="target-names" placeholder="例：3班" required></textarea><button class="gold-button" type="submit">＋ 追加</button></div></form></div><div class="flex between list-heading"><h2>登録済みの評価対象 <span id="target-count" class="muted"></span></h2><input id="target-search" type="search" placeholder="名前で検索…" aria-label="評価対象を検索"></div><div class="table-wrap target-table"><table><thead><tr><th>No.</th><th>対象名</th><th>評価記録</th><th>操作</th></tr></thead><tbody id="targets-list"></tbody></table></div></div>
 <div class="panel hidden" id="tab-criteria"><h1>ルーブリックの登録・編集</h1><div class="rubric-setup"><div><label for="rubric-scale">評価入力の選択肢数</label><select id="rubric-scale"><option value="3">3段階</option><option value="4">4段階</option><option value="5">5段階（A+・A・B・C+・C）</option></select></div><button type="button" id="save-rubric-scale" class="secondary">段階数を変更</button><p>評価の選択肢数と、文章で示す基準の数は別々に設定できます。例：5段階で評価し、そのうち3段階の評価基準文を表示。</p></div><div class="editor-grid"><div class="criterion-sidebar"><h2>ルーブリック項目 <span id="criterion-count" class="muted"></span></h2><div id="criteria-list"></div><button type="button" class="secondary" id="new-criterion">＋ 項目を追加</button></div><div class="criterion-editor"><h2 id="criterion-editor-title">評価項目の登録</h2><form id="criterion-form"><label for="criterion-title">観点名</label><input id="criterion-title" required placeholder="例：地歴の融合"><label for="criterion-description">説明（任意）</label><input id="criterion-description" placeholder="この観点で何を評価するか"><h3>評価基準（ルーブリック）</h3><p class="muted">各段階の「評価基準文を表示する」をオン・オフできます。評価の選択ボタンはすべて残ります。</p><div id="criterion-descriptors"></div><div id="descriptor-count" class="descriptor-count"></div><div class="actions between"><button type="button" class="secondary" id="cancel-criterion">キャンセル</button><button type="submit" class="gold-button" id="criterion-submit">✓ 保存</button></div></form></div></div></div>
 <div class="panel hidden" id="tab-evaluate"><div class="c2-toolbar"><label for="evaluate-target">評価対象グループ</label><select id="evaluate-target"></select><span class="c2-evaluator">評価者：<span id="evaluate-teacher-label"></span></span><button type="button" class="secondary small" id="expand-all">すべて展開</button><button type="button" class="secondary small" id="collapse-all">すべて折りたたむ</button></div><div id="evaluation-body"></div><div class="c2-footer"><label for="evaluate-comment">総合コメント（任意）</label><textarea id="evaluate-comment" placeholder="評価の根拠や気づきを入力"></textarea><div id="save-panel" class="save-panel"><div><div id="save-status" class="save-status" role="status" aria-live="polite">未保存</div><p class="save-help">再保存すると前の評価を上書きします。</p></div><button type="button" id="save-evaluation">評価を保存</button></div></div></div>
-<div class="panel hidden" id="tab-results"><h2>評価一覧</h2><p class="muted">評価者ごとの記録を表示します。全件をダウンロードするには「CSV出力」を押してください。</p><div id="results-list"></div></div></div></div></div></section>
+<div class="panel hidden" id="tab-results">
+<div class="results-heading"><div><h1>評価一覧</h1><p class="muted">評価対象ごとの平均と、教員別の評価を確認できます。</p></div><button type="button" class="secondary" id="results-csv">⇩ CSV出力</button></div>
+<div id="results-overview">
+<div class="results-filters"><label for="results-search">評価対象を検索<input id="results-search" type="search" placeholder="班名・生徒名で検索"></label><label for="results-status">評価状況<select id="results-status"><option value="all">すべて</option><option value="rated">評価あり</option><option value="unrated">未評価</option></select></label><span id="results-total" class="muted"></span></div>
+<div class="results-scroll"><table class="results-table"><thead id="results-table-head"></thead><tbody id="results-list"></tbody></table></div>
+<p class="results-caption">平均は保存済みの評価のみから計算しています。評価対象名を押すと教員別の詳細を確認できます。</p></div>
+<div id="results-detail" class="hidden"><div class="results-detail-bar"><button type="button" class="secondary small" id="results-back">← 評価一覧に戻る</button><span id="results-detail-position" class="muted"></span><div class="results-detail-nav"><button type="button" class="secondary small" id="results-prev">〈 前の対象</button><button type="button" class="secondary small" id="results-next">次の対象 〉</button></div></div><div class="results-detail-title"><h2 id="results-detail-name"></h2><div class="results-total-score"><span>総合平均</span><strong id="results-detail-average">—</strong><span id="results-detail-teachers"></span></div></div><div class="results-scroll"><table class="results-table results-detail-table"><thead id="results-detail-head"></thead><tbody id="results-detail-body"></tbody></table></div><section class="results-comments"><h3>教員別コメント</h3><div id="results-detail-comments"></div></section></div>
+</div></div></div></div></section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
@@ -292,7 +338,7 @@ const PROJECT_URL='https://cdoydtconrygubkyeyym.supabase.co';
 const PUBLISHABLE_KEY='sb_publishable_KApWphyPCNW8M9U95_kPCg_Oxuy3KA4';
 const client=window.supabase.createClient(PROJECT_URL,PUBLISHABLE_KEY);
 const $=id=>document.getElementById(id);
-const state={user:null,profile:null,projects:[],project:null,targets:[],criteria:[],assessments:[],scores:[],selectedTarget:null,selectedScores:{},selectedAssessment:null,tab:'targets'};
+const state={user:null,profile:null,projects:[],project:null,targets:[],criteria:[],assessments:[],scores:[],teacherNames:{},resultsTargetId:null,resultsSearch:'',resultsStatus:'all',selectedTarget:null,selectedScores:{},selectedAssessment:null,tab:'targets'};
 const escapeHtml=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function notify(s,error=false,login=false){const el=$(login?'login-message':'app-notice');el.textContent=s;el.classList.toggle('hidden',!s);el.classList.toggle('error',error);if(error)console.warn(s);}
 function fail(e,context='操作'){console.error(e);notify(context+'に失敗しました。'+(e?.message?' '+e.message:''),true);}
@@ -313,8 +359,9 @@ async function reloadProject(){const pid=state.project.id;const [targets,criteri
  checked(client.from('targets').select('id,project_id,name,created_at').eq('project_id',pid).order('created_at')),
  checked(client.from('criteria').select('id,project_id,title,description,descriptors,sort_order').eq('project_id',pid).order('sort_order')),
  checked(client.from('assessments').select('id,project_id,target_id,teacher_id,comment,created_at').eq('project_id',pid).order('created_at',{ascending:false}))]);
- state.targets=targets;state.criteria=criteria;state.assessments=assessments;state.scores=[];
+ state.targets=targets;state.criteria=criteria;state.assessments=assessments;state.scores=[];state.teacherNames={};
  if(assessments.length){const ids=assessments.map(a=>a.id);for(let i=0;i<ids.length;i+=100){const part=await checked(client.from('assessment_scores').select('id,assessment_id,criterion_id,score').in('assessment_id',ids.slice(i,i+100)));state.scores.push(...part);}}
+ const teacherIds=[...new Set(assessments.map(a=>a.teacher_id).filter(Boolean))];if(teacherIds.length){for(let i=0;i<teacherIds.length;i+=100){try{const teachers=await checked(client.from('profiles').select('id,display_name').in('id',teacherIds.slice(i,i+100)));for(const t of teachers)state.teacherNames[t.id]=t.display_name||'名前未設定';}catch(e){console.warn('評価者名の読み込みに失敗しました',e);}}}
  renderTargets();renderCriteria();renderTargetSelect();renderResults();renderDescriptorInputs(state.criteria.find(c=>c.id===state.editCriterionId));$('rubric-scale').value=String(state.project.scale_count);renderHome();}
 function renderTargets(){
  const q=($('target-search')?.value||'').trim().toLowerCase(),el=$('targets-list');
@@ -377,8 +424,54 @@ function renderEvaluation(){
 function syncNav(tab){document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===tab));}
 function setTab(tab){if(state.tab==='evaluate'&&tab!=='evaluate'&&state.dirty&&!confirm('未保存の変更があります。保存せずに移動しますか？'))return false;state.tab=tab;showOnly('project-detail-view');document.body.classList.toggle('c2-mode',tab==='evaluate');for(const b of document.querySelectorAll('[data-tab]'))b.classList.toggle('active',b.dataset.tab===tab);for(const id of ['targets','criteria','evaluate','results'])$('tab-'+id).classList.toggle('hidden',id!==tab);if(tab==='results')renderResults();syncNav(tab);return true;}
 function navigate(tab){if(state.dirty&&state.tab==='evaluate'&&tab!=='evaluate'&&!confirm('未保存の変更があります。移動すると変更内容は失われます。'))return;if(tab==='export'){if(state.project)exportCsv();return;}if(tab==='settings'){document.body.classList.remove('c2-mode');showOnly('project-list-view');syncNav('settings');return;}if(tab==='home'){document.body.classList.remove('c2-mode');showOnly('home-view');renderHome();syncNav('home');return;}if(!state.project){showOnly('project-list-view');syncNav('settings');return;}setTab(tab);}
-function renderResults(){const el=$('results-list');if(!state.assessments.length){el.innerHTML='<p class="muted">評価記録はまだありません。</p>';return;}
- const names=new Map(state.targets.map(t=>[t.id,t.name]));const titleMap=new Map(state.criteria.map(c=>[c.id,c.title]));const list=state.assessments.map(a=>{const scores=state.scores.filter(s=>s.assessment_id===a.id);const parts=scores.map(s=>`${titleMap.get(s.criterion_id)||'評価項目'}：${s.score}`).join(' ／ ');return `<div class="item"><strong>${escapeHtml(names.get(a.target_id)||'対象不明')}</strong> <span class="pill">${a.teacher_id===state.user.id?'自分の評価':'他の教員の評価'}</span><div class="muted">${escapeHtml(parts||'点数なし')}</div><div class="muted">${escapeHtml(a.comment||'')}</div><div class="meta">${escapeHtml(a.created_at?new Date(a.created_at).toLocaleString('ja-JP'):'')}</div></div>`;});el.innerHTML=list.join('');}
+function resultsData(){
+ const scoreByAssessment=new Map();
+ for(const s of state.scores){if(!scoreByAssessment.has(s.assessment_id))scoreByAssessment.set(s.assessment_id,new Map());scoreByAssessment.get(s.assessment_id).set(s.criterion_id,Number(s.score));}
+ const assessmentsByTarget=new Map();
+ for(const a of state.assessments){if(!assessmentsByTarget.has(a.target_id))assessmentsByTarget.set(a.target_id,[]);assessmentsByTarget.get(a.target_id).push(a);}
+ return state.targets.map(target=>{
+  const assessments=assessmentsByTarget.get(target.id)||[];
+  const itemScores=state.criteria.map(c=>assessments.map(a=>scoreByAssessment.get(a.id)?.get(c.id)).filter(v=>Number.isFinite(v)&&v>=1&&v<=Number(state.project.scale_count)));
+  const average=values=>values.length?values.reduce((total,v)=>total+v,0)/values.length:null;
+  const criterionMeans=itemScores.map(average);
+  const allValues=itemScores.flat();
+  const overall=average(allValues);
+  const teacherCount=new Set(assessments.filter(a=>state.criteria.some(c=>scoreByAssessment.get(a.id)?.has(c.id))).map(a=>a.teacher_id)).size;
+  return {target,assessments,scoreByAssessment,criterionMeans,overall,teacherCount};
+ });
+}
+function resultsVisibleRows(){
+ const q=state.resultsSearch.toLocaleLowerCase('ja-JP'),status=state.resultsStatus;
+ return resultsData().filter(row=>row.target.name.toLocaleLowerCase('ja-JP').includes(q)&&(status==='all'||(status==='rated'?row.teacherCount>0:row.teacherCount===0)));
+}
+function formatMean(n,digits=2){return n===null?'—':n.toFixed(digits);}
+function teacherDisplayName(id){return state.teacherNames[id]||(id===state.user?.id?state.profile?.display_name:'名前未取得')||'名前未取得';}
+function renderResults(){
+ if(!state.project)return;
+ const count=Number(state.project.scale_count),rows=resultsVisibleRows();
+ $('results-search').value=state.resultsSearch;$('results-status').value=state.resultsStatus;
+ $('results-overview').classList.toggle('hidden',!!state.resultsTargetId);$('results-detail').classList.toggle('hidden',!state.resultsTargetId);
+ $('results-total').textContent='表示：'+rows.length+' / '+state.targets.length+'件';
+ $('results-table-head').innerHTML='<tr><th>No.</th><th class="results-name-col">評価対象</th>'+state.criteria.map(c=>'<th title="'+escapeHtml(c.title)+'">'+escapeHtml(c.title)+'</th>').join('')+'<th class="results-mean">総合平均</th><th>評価教員数</th></tr>';
+ $('results-list').innerHTML=rows.length?rows.map((row,i)=>'<tr><td>'+(i+1)+'</td><td class="results-name-col"><button type="button" class="results-target-link" data-results-target="'+escapeHtml(row.target.id)+'">'+escapeHtml(row.target.name)+'</button></td>'+row.criterionMeans.map(v=>'<td class="results-number">'+formatMean(v,1)+'</td>').join('')+'<td class="results-mean results-number">'+formatMean(row.overall)+'</td><td class="results-number">'+row.teacherCount+'名</td></tr>').join(''):'<tr><td colspan="'+(state.criteria.length+4)+'" class="muted">条件に該当する評価対象がありません。</td></tr>';
+ if(state.resultsTargetId)renderResultsDetail(rows);
+}
+function renderResultsDetail(rows=resultsVisibleRows()){
+ const index=rows.findIndex(r=>r.target.id===state.resultsTargetId);
+ if(index<0){state.resultsTargetId=null;renderResults();return;}
+ const row=rows[index],count=Number(state.project.scale_count),assessments=row.assessments.slice().sort((a,b)=>(teacherDisplayName(a.teacher_id)).localeCompare(teacherDisplayName(b.teacher_id),'ja'));
+ $('results-detail-name').textContent=row.target.name;
+ $('results-detail-position').textContent=(index+1)+' / '+rows.length+'件';
+ $('results-detail-average').textContent=formatMean(row.overall);
+ $('results-detail-teachers').textContent='評価教員数 '+row.teacherCount+'名';
+ $('results-prev').disabled=index===0;$('results-next').disabled=index===rows.length-1;
+ $('results-detail-head').innerHTML='<tr><th>評価項目</th><th class="results-mean">平均</th>'+assessments.map(a=>'<th>'+escapeHtml(teacherDisplayName(a.teacher_id))+'</th>').join('')+'</tr>';
+ const nameCols=assessments.length;
+ $('results-detail-body').innerHTML=state.criteria.length?state.criteria.map((c,i)=>'<tr><th>'+escapeHtml(c.title)+'</th><td class="results-mean results-number">'+formatMean(row.criterionMeans[i],1)+'</td>'+assessments.map(a=>{const n=row.scoreByAssessment.get(a.id)?.get(c.id);return '<td class="results-number">'+(Number.isFinite(n)?escapeHtml(scoreLabel(n,count)):'—')+'</td>';}).join('')+'</tr>').join('')+'<tr class="results-summary-row"><th>総合平均</th><td class="results-mean results-number">'+formatMean(row.overall)+'</td>'+assessments.map(a=>{const scores=state.criteria.map(c=>row.scoreByAssessment.get(a.id)?.get(c.id)).filter(Number.isFinite);return '<td class="results-number">'+formatMean(scores.length?scores.reduce((x,y)=>x+y,0)/scores.length:null)+'</td>';}).join('')+'</tr>':'<tr><td colspan="'+(nameCols+2)+'">評価項目がありません。</td></tr>';
+ $('results-detail-comments').innerHTML=assessments.length?assessments.map(a=>'<article class="results-comment"><div class="results-comment-top"><strong>'+escapeHtml(teacherDisplayName(a.teacher_id))+'</strong><span class="muted">'+escapeHtml(a.created_at?new Date(a.created_at).toLocaleString('ja-JP'):'')+'</span></div><p>'+escapeHtml(a.comment?.trim()||'コメントなし')+'</p></article>').join(''):'<p class="muted">この対象の評価記録はまだありません。</p>';
+}
+function openResultsTarget(id){if(!state.targets.some(t=>t.id===id))return;state.resultsTargetId=id;renderResults();}
+function moveResultsTarget(direction){const rows=resultsVisibleRows();const i=rows.findIndex(r=>r.target.id===state.resultsTargetId);if(i<0)return;const target=rows[i+direction];if(target)openResultsTarget(target.target.id);}
 async function saveEvaluation(){
  if(state.saving)return;
  const targetId=state.selectedTarget,projectId=state.project.id,teacherId=state.user.id;
@@ -478,6 +571,14 @@ $('criteria-list').addEventListener('click',async e=>{
  if(!confirm('「'+c.title+'」を削除しますか？'))return;
  try{await checked(client.from('criteria').delete().eq('id',id).select('id').single());state.editCriterionId=null;await reloadProject();editCriterion();notify('評価項目を削除しました。');}catch(err){fail(err,'項目の削除');}
 });
+
+$('results-search').addEventListener('input',e=>{state.resultsSearch=e.target.value;state.resultsTargetId=null;renderResults();});
+$('results-status').addEventListener('change',e=>{state.resultsStatus=e.target.value;state.resultsTargetId=null;renderResults();});
+$('results-list').addEventListener('click',e=>{const button=e.target.closest('[data-results-target]');if(button)openResultsTarget(button.dataset.resultsTarget);});
+$('results-back').addEventListener('click',()=>{state.resultsTargetId=null;renderResults();});
+$('results-prev').addEventListener('click',()=>moveResultsTarget(-1));
+$('results-next').addEventListener('click',()=>moveResultsTarget(1));
+$('results-csv').addEventListener('click',exportCsv);
 $('evaluate-target').addEventListener('change',e=>{if(state.dirty&&!confirm('未保存の変更があります。保存せずに評価対象を変更しますか？')){e.target.value=state.selectedTarget;return;}state.selectedTarget=e.target.value;state.expandedCriteria=new Set();renderEvaluation();});
 $('evaluation-body').addEventListener('click',e=>{
  const t=e.target.closest('[data-toggle]');
