@@ -148,9 +148,24 @@ create policy assignments_read on public.project_teacher_criteria for select to 
  using(public.can_view_project(project_id));
 create policy assignments_insert on public.project_teacher_criteria for insert to authenticated
  with check(public.can_manage_project(project_id) and exists(
- select 1 from public.criteria where id=criterion_id and project_id=project_teacher_criteria.project_id));
+ select 1 from public.criteria where id=criterion_id and project_id=project_teacher_criteria.project_id)
+ and (exists(select 1 from public.projects p where p.id=project_id and p.created_by=teacher_id)
+ or exists(select 1 from public.project_members m where m.project_id=project_teacher_criteria.project_id and m.user_id=teacher_id)));
 create policy assignments_delete on public.project_teacher_criteria for delete to authenticated
  using(public.can_manage_project(project_id));
+
+-- The ownership identity must not be transferable through a generic project update.
+create or replace function public.protect_project_creator()
+returns trigger language plpgsql set search_path=public as $
+begin
+ if new.created_by is distinct from old.created_by then
+  raise exception 'プロジェクトの作成者は変更できません';
+ end if;
+ return new;
+end $;
+drop trigger if exists protect_project_creator on public.projects;
+create trigger protect_project_creator before update on public.projects
+ for each row execute function public.protect_project_creator();
 
 -- Update the atomic assignment RPC installed by the prior migration.
 create or replace function public.set_project_teacher_criteria(
