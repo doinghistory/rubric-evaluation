@@ -351,6 +351,16 @@ button.project-delete-button:hover{background:#fff0f1;color:#8d1d25}
 .assignment-footer{padding:18px 0 0}
 .assignment-notice{background:#fff7e6;border-left:3px solid #b48b2d;padding:12px;margin:14px 0}
 @media(max-width:740px){.assignment-layout{grid-template-columns:1fr}.assignment-people{border-right:0;border-bottom:1px solid #d6dbe4}.assignment-editor{padding:13px}}
+
+.project-section-title{font-size:15px;margin:22px 0 9px;border-bottom:1px solid #d9dfe7;padding-bottom:9px}
+.my-projects{margin-bottom:15px}.my-projects h2{margin:0}
+.home-project-link{display:flex!important;justify-content:space-between;gap:8px;width:100%;padding:12px!important;background:white!important;color:#18314e!important;border:0!important;border-bottom:1px solid #dce2e9!important;text-align:left}
+.home-project-link small{font-weight:400;color:#64748b}
+.participant-row{display:grid;grid-template-columns:minmax(0,1fr) 115px auto;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid #dfe3ea}
+.participant-row small{display:block;font-size:11px;color:#6c7887}.participant-row select{min-width:100px}
+#participants-add-form>label{margin-top:14px}#participants-add-form>input,#participants-add-form>select{width:100%}
+#participants-add{margin-top:13px}
+@media(max-width:650px){.participant-row{grid-template-columns:1fr auto}.participant-row select{grid-column:1}}
 </style>
 </head>
 <body>
@@ -444,7 +454,12 @@ async function reloadProject(){const pid=state.project.id;const [targets,criteri
  if(assessments.length){const ids=assessments.map(a=>a.id);for(let i=0;i<ids.length;i+=100){const part=await checked(client.from('assessment_scores').select('id,assessment_id,criterion_id,score').in('assessment_id',ids.slice(i,i+100)));state.scores.push(...part);}}
  const teacherIds=[...new Set(assessments.map(a=>a.teacher_id).filter(Boolean))];if(teacherIds.length){for(let i=0;i<teacherIds.length;i+=100){try{const teachers=await checked(client.from('profiles').select('id,display_name').in('id',teacherIds.slice(i,i+100)));for(const t of teachers)state.teacherNames[t.id]=t.display_name||'名前未設定';}catch(e){console.warn('評価者名の読み込みに失敗しました',e);}}}
  try{state.members=await checked(client.from('project_members').select('project_id,user_id,role').eq('project_id',pid));}catch(e){state.members=[];console.warn('参加教員の取得',e);}
- renderTargets();renderCriteria();renderAssignmentSettings();renderParticipants();renderTargetSelect();renderResults();renderDescriptorInputs(state.criteria.find(c=>c.id===state.editCriterionId));$('rubric-scale').value=String(state.project.scale_count);renderHome();}
+ renderTargets();renderCriteria();renderAssignmentSettings();renderParticipants();
+ $('participants-nav').classList.toggle('hidden',!isProjectOwner());
+ $('assignment-nav').classList.toggle('hidden',!canManageProject());
+ $('participants-tab-button').classList.toggle('hidden',!isProjectOwner());
+ $('assignment-tab-button').classList.toggle('hidden',!canManageProject());
+renderTargetSelect();renderResults();renderDescriptorInputs(state.criteria.find(c=>c.id===state.editCriterionId));$('rubric-scale').value=String(state.project.scale_count);renderHome();}
 function renderTargets(){
  const q=($('target-search')?.value||'').trim().toLowerCase(),el=$('targets-list');
  $('target-count').textContent='（'+state.targets.length+'件）';
@@ -507,8 +522,8 @@ function renderEvaluation(){
 }
 
 function syncNav(tab){document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===tab));}
-function setTab(tab){if(state.tab==='evaluate'&&tab!=='evaluate'&&state.dirty&&!confirm('未保存の変更があります。保存せずに移動しますか？'))return false;state.tab=tab;showOnly('project-detail-view');document.body.classList.toggle('c2-mode',tab==='evaluate');for(const b of document.querySelectorAll('[data-tab]'))b.classList.toggle('active',b.dataset.tab===tab);for(const id of ['targets','criteria','assignments','participants','evaluate','results'])$('tab-'+id).classList.toggle('hidden',id!==tab);if(tab==='results')renderResults();if(tab==='assignments')void loadAssignmentTeachers();if(tab==='participants')void loadParticipants();syncNav(tab);return true;}
-function navigate(tab){if(state.dirty&&state.tab==='evaluate'&&tab!=='evaluate'&&!confirm('未保存の変更があります。移動すると変更内容は失われます。'))return;if(tab==='export'){if(state.project)exportCsv();return;}if(tab==='settings'){document.body.classList.remove('c2-mode');showOnly('project-list-view');syncNav('settings');return;}if(tab==='staff'){document.body.classList.remove('c2-mode');showOnly('staff-view');syncNav('staff');void loadStaff();return;}if(tab==='home'){document.body.classList.remove('c2-mode');showOnly('home-view');renderHome();syncNav('home');return;}if(!state.project){showOnly('project-list-view');syncNav('settings');return;}setTab(tab);}
+function setTab(tab){if((tab==='assignments'&&!canManageProject())||(tab==='participants'&&!isProjectOwner()))return false;if(state.tab==='evaluate'&&tab!=='evaluate'&&state.dirty&&!confirm('未保存の変更があります。保存せずに移動しますか？'))return false;state.tab=tab;showOnly('project-detail-view');document.body.classList.toggle('c2-mode',tab==='evaluate');for(const b of document.querySelectorAll('[data-tab]'))b.classList.toggle('active',b.dataset.tab===tab);for(const id of ['targets','criteria','assignments','participants','evaluate','results'])$('tab-'+id).classList.toggle('hidden',id!==tab);if(tab==='results')renderResults();if(tab==='assignments')void loadAssignmentTeachers();if(tab==='participants')void loadParticipants();syncNav(tab);return true;}
+function navigate(tab){if(state.dirty&&state.tab==='evaluate'&&tab!=='evaluate'&&!confirm('未保存の変更があります。移動すると変更内容は失われます。'))return;if(tab==='export'){if(state.project)exportCsv();return;}if(tab==='settings'){document.body.classList.remove('c2-mode');showOnly('project-list-view');syncNav('settings');return;}if(tab==='staff'){if(state.profile?.role!=='admin')return;document.body.classList.remove('c2-mode');showOnly('staff-view');syncNav('staff');void loadStaff();return;}if((tab==='assignments'&&!canManageProject())||(tab==='participants'&&!isProjectOwner())){notify('このプロジェクトの管理権限が必要です。',true);return;}if(tab==='home'){document.body.classList.remove('c2-mode');showOnly('home-view');renderHome();syncNav('home');return;}if(!state.project){showOnly('project-list-view');syncNav('settings');return;}setTab(tab);}
 function resultsData(){
  const scoreByAssessment=new Map();
  for(const s of state.scores){
@@ -597,12 +612,14 @@ function exportCsv(){if(!state.project)return;const names=new Map(state.targets.
 $('login-form').addEventListener('submit',async e=>{e.preventDefault();const no=$('employee').value.trim();if(!/^\d{6}$/.test(no)){notify('職員番号は6桁の数字で入力してください。',true,true);return;}const btn=$('login-button');btn.disabled=true;notify('ログインしています…',false,true);try{const email=`staff${no}@rubric-login.example.com`;const data=await checked(client.auth.signInWithPassword({email,password:$('password').value}));notify('',false,true);await showHome(data.user);}catch(e){console.error(e);notify('ログインできませんでした。職員番号とパスワードを確認してください。',true,true);}finally{btn.disabled=false;}});
 $('logout').addEventListener('click',async()=>{await client.auth.signOut();showLogin();notify('ログアウトしました。',false,true);});
 $('new-project').addEventListener('click',()=>{notify('');showOnly('project-create-view');});
+$('home-project-list').addEventListener('click',e=>{const b=e.target.closest('[data-home-project]');if(b)void openProject(b.dataset.homeProject,'targets');});
+
 for(const b of document.querySelectorAll('[data-back]'))b.addEventListener('click',()=>showOnly('project-list-view'));
 $('back-list').addEventListener('click',async()=>{try{await loadProjects();showOnly('project-list-view');notify('');}catch(e){fail(e,'一覧の取得');}});
 $('project-list').addEventListener('click',async e=>{
  const remove=e.target.closest('[data-delete-project]');
  if(remove){
-  if(state.profile?.role!=='admin'){notify('プロジェクトの削除は管理者のみ可能です。',true);return;}
+  if(!isProjectOwner(state.projects.find(p=>p.id===remove.dataset.deleteProject))){notify('プロジェクトの削除は作成者のみ可能です。',true);return;}
   const project=state.projects.find(p=>p.id===remove.dataset.deleteProject);
   if(!project)return;
   const typed=prompt('プロジェクト「'+project.name+'」を完全に削除します。\n登録された評価対象・ルーブリック・評価結果も削除対象となり、元に戻せません。\n\n削除する場合は、プロジェクト名を正確に入力してください。');
@@ -653,7 +670,7 @@ $('criterion-descriptors').addEventListener('change',e=>{
 $('save-rubric-scale').addEventListener('click',async()=>{
  const next=Number($('rubric-scale').value),previous=Number(state.project.scale_count);
  if(next===previous){notify('段階数は変更されていません。');return;}
- if(state.profile.role!=='admin'){notify('段階数の変更は管理者のみ可能です。',true);$('rubric-scale').value=String(previous);return;}
+ if(!canManageProject()){notify('このプロジェクトの編集権限が必要です。',true);$('rubric-scale').value=String(previous);return;}
  if(next<previous&&state.scores.some(s=>Number(s.score)>next)){
   notify('新しい段階数を超える保存済みの評価があります。評価結果を保護するため段階数は変更できません。',true);$('rubric-scale').value=String(previous);return;
  }
@@ -676,7 +693,7 @@ $('target-search').addEventListener('input',renderTargets);
 $('targets-list').addEventListener('click',async e=>{
  const edit=e.target.closest('[data-target-edit]'),del=e.target.closest('[data-target-remove]');if(!edit&&!del)return;
  const id=(edit?.dataset.targetEdit||del?.dataset.targetRemove),t=state.targets.find(x=>x.id===id);if(!t)return;
- if(state.profile.role!=='admin'){notify('この操作は管理者のみ可能です。',true);return;}
+ if(!canManageProject()){notify('このプロジェクトの編集権限が必要です。',true);return;}
  try{
  if(edit){const name=prompt('評価対象名を変更',t.name)?.trim();if(!name||name===t.name)return;await checked(client.from('targets').update({name}).eq('id',id).select('id').single());notify('評価対象名を更新しました。');}
  else{if(state.assessments.some(a=>a.target_id===id)){notify('評価記録がある対象は、誤削除防止のため削除できません。',true);return;}if(!confirm('「'+t.name+'」を削除しますか？'))return;await checked(client.from('targets').delete().eq('id',id).select('id').single());notify('評価対象を削除しました。');}
@@ -689,7 +706,7 @@ $('criteria-list').addEventListener('click',async e=>{
  const edit=e.target.closest('[data-edit-criterion]'),del=e.target.closest('[data-delete-criterion]');if(!edit&&!del)return;
  const id=edit?.dataset.editCriterion||del?.dataset.deleteCriterion,c=state.criteria.find(x=>x.id===id);if(!c)return;
  if(edit){editCriterion(id);return;}
- if(state.profile.role!=='admin'){notify('削除は管理者のみ可能です。',true);return;}
+ if(!canManageProject()){notify('このプロジェクトの編集権限が必要です。',true);return;}
  if(state.scores.some(x=>x.criterion_id===id)){notify('すでに評価記録がある項目は削除できません。',true);return;}
  if(!confirm('「'+c.title+'」を削除しますか？'))return;
  try{await checked(client.from('criteria').delete().eq('id',id).select('id').single());state.editCriterionId=null;await reloadProject();editCriterion();notify('評価項目を削除しました。');}catch(err){fail(err,'項目の削除');}
@@ -796,7 +813,7 @@ async function commitCsv(kind){
  const pending=csvPending[kind];
  if(!pending||pending.projectId!==state.project?.id)throw Error('プロジェクトが変更されています。CSVを選び直してください。');
  if(!pending.rows.length)return;
- if(state.profile?.role!=='admin')throw Error('CSVからの登録は管理者のみ可能です。');
+ if(!canManageProject())throw Error('このプロジェクトの編集権限が必要です。');
  if(!confirm(pending.rows.length+'件を登録しますか？既存のデータは上書きしません。'))return;
  const table=kind==='targets'?'targets':'criteria',existing=new Set((kind==='targets'?state.targets:state.criteria).map(x=>kind==='targets'?x.name:x.title));
  const rows=pending.rows.filter(x=>!existing.has(kind==='targets'?x.name:x.title));let inserted=0;
@@ -872,15 +889,16 @@ function isCriterionAssigned(teacherId,criterionId){
  return assignedCriteriaFor(teacherId).some(c=>c.id===criterionId);
 }
 async function loadAssignmentTeachers(){
- if(state.profile?.role!=='admin')return;
+ if(!canManageProject())return;
  try{
-  state.assignmentTeachers=await checked(client.from('profiles').select('id,display_name,employee_no,role,is_active').eq('is_active',true).order('employee_no').limit(1000));
+  const participantIds=[state.project.created_by,...state.members.map(m=>m.user_id)];
+  state.assignmentTeachers=await checked(client.from('profiles').select('id,display_name,employee_no,role,is_active').in('id',[...new Set(participantIds)]).eq('is_active',true).order('employee_no').limit(1000));
   renderAssignmentSettings();
  }catch(err){$('assignment-notice').classList.remove('hidden');$('assignment-notice').textContent='教員一覧の取得に失敗しました：'+(err?.message||'不明なエラー');}
 }
 function renderAssignmentSettings(){
  const tab=$('assignment-tab-button');
- const admin=state.profile?.role==='admin';
+ const admin=canManageProject();
  tab.classList.toggle('hidden',!admin);
  const notice=$('assignment-notice'),save=$('assignment-save');
  if(!admin){return;}
@@ -929,7 +947,7 @@ $('assignment-criterion-list').addEventListener('change',e=>{
 $('assignment-all').addEventListener('click',()=>{state.assignmentDraft=new Set(state.criteria.map(c=>c.id));renderAssignmentSettings();});
 $('assignment-none').addEventListener('click',()=>{state.assignmentDraft.clear();renderAssignmentSettings();});
 $('assignment-save').addEventListener('click',async()=>{
- if(state.profile?.role!=='admin'||!state.assignmentReady||!state.assignmentTeacherId)return;
+ if(!canManageProject()||!state.assignmentReady||!state.assignmentTeacherId)return;
  const ids=state.criteria.filter(c=>state.assignmentDraft.has(c.id)).map(c=>c.id);
  if(!ids.length){notify('担当する項目を1つ以上選択してください。',true);return;}
  const button=$('assignment-save');button.disabled=true;
@@ -943,6 +961,52 @@ $('assignment-save').addEventListener('click',async()=>{
  }catch(error){fail(error,'評価担当の保存');}finally{button.disabled=false;}
 });
 
+
+async function loadParticipants(){
+ if(!state.project)return;
+ try{state.members=await checked(client.from('project_members').select('project_id,user_id,role').eq('project_id',state.project.id));renderParticipants();}
+ catch(e){const p=$('participants-status');p.classList.remove('hidden');p.textContent='参加教員を取得できません：'+e.message;}
+}
+function renderParticipants(){
+ const owner=isProjectOwner();$('participants-tab-button').classList.toggle('hidden',!owner);
+ const list=$('participants-list');
+ if(!owner){list.innerHTML='';return;}
+ const rows=state.members.map(m=>{
+ const t=state.assignmentTeachers.find(x=>x.id===m.user_id);
+ return '<div class="participant-row"><div><strong>'+escapeHtml(t?.display_name||state.teacherNames[m.user_id]||'教員')+'</strong><small>'+escapeHtml(t?.employee_no||'')+'</small></div><select data-member-role="'+escapeHtml(m.user_id)+'"><option value="evaluator"'+(m.role==='evaluator'?' selected':'')+'>評価者</option><option value="editor"'+(m.role==='editor'?' selected':'')+'>共同編集者</option></select><button type="button" class="secondary small" data-remove-member="'+escapeHtml(m.user_id)+'">解除</button></div>';
+ });
+ list.innerHTML='<div class="participant-row"><strong>自分（作成者）</strong><span>管理者</span></div>'+rows.join('');
+}
+$('participants-add-form').addEventListener('submit',async e=>{
+ e.preventDefault();if(!isProjectOwner())return;
+ const no=$('participants-employee').value.trim(),role=$('participants-role').value;
+ if(!/^\d{6}$/.test(no)){notify('職員番号は6桁で入力してください。',true);return;}
+ const btn=$('participants-add');btn.disabled=true;
+ try{
+  const teachers=await checked(client.from('profiles').select('id,display_name,is_active').eq('employee_no',no).limit(1));
+  const t=teachers[0];
+  if(!t||!t.is_active)throw Error('利用中の教員が見つかりません。');
+  if(t.id===state.project.created_by)throw Error('作成者は追加不要です。');
+  if(state.members.some(m=>m.user_id===t.id))throw Error('この教員は参加済みです。');
+  await checked(client.from('project_members').insert({project_id:state.project.id,user_id:t.id,role}));
+  $('participants-add-form').reset();await loadParticipants();notify(t.display_name+'さんを追加しました。');
+ }catch(err){fail(err,'参加教員の追加');}finally{btn.disabled=false;}
+});
+$('participants-list').addEventListener('change',async e=>{
+ const input=e.target.closest('[data-member-role]');if(!input||!isProjectOwner())return;
+ input.disabled=true;try{
+  await checked(client.from('project_members').update({role:input.value}).eq('project_id',state.project.id).eq('user_id',input.dataset.memberRole).select('user_id').single());
+  await loadParticipants();notify('参加権限を変更しました。');
+ }catch(err){fail(err,'参加権限の変更');await loadParticipants();}finally{input.disabled=false;}
+});
+$('participants-list').addEventListener('click',async e=>{
+ const button=e.target.closest('[data-remove-member]');if(!button||!isProjectOwner())return;
+ if(!confirm('この教員の参加を解除しますか？既存の評価記録は残ります。'))return;
+ button.disabled=true;try{
+  await checked(client.from('project_members').delete().eq('project_id',state.project.id).eq('user_id',button.dataset.removeMember).select('user_id').single());
+  await loadParticipants();notify('参加を解除しました。');
+ }catch(err){fail(err,'参加解除');}finally{button.disabled=false;}
+});
 </script>
 </body>
 </html>
