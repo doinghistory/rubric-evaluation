@@ -368,44 +368,7 @@ button.project-delete-button:hover{background:#fff0f1;color:#8d1d25}
 <div id="results-detail" class="hidden"><div class="results-detail-bar"><button type="button" class="secondary small" id="results-back">← 評価一覧に戻る</button><span id="results-detail-position" class="muted"></span><div class="results-detail-nav"><button type="button" class="secondary small" id="results-prev">〈 前の対象</button><button type="button" class="secondary small" id="results-next">次の対象 〉</button></div></div><div class="results-detail-title"><h2 id="results-detail-name"></h2><div class="results-total-score"><span>総合平均</span><strong id="results-detail-average">—</strong><span id="results-detail-teachers"></span></div></div><div class="results-scroll"><table class="results-table results-detail-table"><thead id="results-detail-head"></thead><tbody id="results-detail-body"></tbody></table></div><section class="results-comments"><h3>教員別コメント</h3><div id="results-detail-comments"></div></section></div>
 </div></div></div></div></section>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js">
-/* Server-side administrator account management: no privileged API key in the browser. */
-async function staffRequest(payload){
- const {data:{session},error:sessionError}=await client.auth.getSession();
- if(sessionError||!session?.access_token)throw Error('ログイン情報が失効しました。再ログインしてください。');
- const response=await fetch(PROJECT_URL+'/functions/v1/manage-staff',{method:'POST',headers:{
-  'Content-Type':'application/json','apikey':PUBLISHABLE_KEY,'Authorization':'Bearer '+session.access_token
- },body:JSON.stringify(payload)});
- let body=null;try{body=await response.json();}catch(_){}
- if(!response.ok)throw Error(body?.error||'教員管理機能へ接続できません。SupabaseのEdge Function「manage-staff」を公開してください。');
- return body;
-}
-async function loadStaff(){
- if(state.profile?.role!=='admin')return;
- $('staff-service-message').textContent='教員一覧を読み込んでいます…';
- try{
-  const data=await staffRequest({action:'list'});
-  const list=data?.staff||[];
-  $('staff-list').innerHTML=list.length?list.map(t=>'<div class="staff-row"><strong>'+escapeHtml(t.display_name)+'</strong><span>'+escapeHtml(t.employee_no)+'</span><span class="staff-state">'+(t.is_active?'利用中':'停止中')+'</span><button type="button" class="secondary small" data-staff-toggle="'+escapeHtml(t.id)+'" data-staff-active="'+(t.is_active?'true':'false')+'"'+(t.id===state.user.id?' disabled':'')+'>'+(t.is_active?'利用停止':'再開')+'</button></div>').join(''):'教員はまだ登録されていません。';
-  $('staff-service-message').textContent='教員管理機能に接続しています。';
- }catch(err){$('staff-service-message').textContent='教員管理機能が利用できません：'+err.message;$('staff-list').textContent='一覧を読み込めませんでした。';}
-}
-$('staff-reload').addEventListener('click',loadStaff);
-$('staff-create-form').addEventListener('submit',async e=>{
- e.preventDefault();if(state.profile?.role!=='admin')return;
- const employee_no=$('staff-number').value.trim(),display_name=$('staff-name').value.trim(),password=$('staff-password').value,role=$('staff-role').value;
- if(!/^\d{6}$/.test(employee_no)||!display_name||password.length<12){notify('職員番号・教員名・パスワード（12文字以上）を確認してください。',true);return;}
- const button=$('staff-create-button');button.disabled=true;
- try{await staffRequest({action:'create',employee_no,display_name,password,role});$('staff-create-form').reset();notify('教員を登録しました。初期パスワードを本人に安全に伝えてください。');await loadStaff();}
- catch(err){fail(err,'教員の登録');}finally{button.disabled=false;}
-});
-$('staff-list').addEventListener('click',async e=>{
- const button=e.target.closest('[data-staff-toggle]');if(!button)return;
- const id=button.dataset.staffToggle,is_active=button.dataset.staffActive!=='true';
- if(!confirm('この教員の利用を'+(is_active?'再開':'停止')+'しますか？'))return;
- button.disabled=true;try{await staffRequest({action:'set-active',id,is_active});notify('教員の利用状態を変更しました。');await loadStaff();}catch(err){fail(err,'教員の利用状態変更');}finally{button.disabled=false;}
-});
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 'use strict';
 const PROJECT_URL='https://cdoydtconrygubkyeyym.supabase.co';
@@ -798,6 +761,45 @@ for(const kind of ['targets','criteria']){
   else{const count=Number(state.project?.scale_count||5),levels=Array.from({length:count},(_,i)=>scoreLabel(count-i,count));csvDownload('ルーブリック_見本（'+count+'段階）.csv',[['評価項目','説明',...levels],['情報の活用','資料を適切に使えているか',...levels.map((x,i)=>i===0?'根拠を組み合わせて適切に説明できる':i===Math.floor(count/2)?'資料を使って説明できる':i===count-1?'資料の活用に課題がある':'')]]);}
  });
 }
+
+
+
+/* Server-side administrator account management: no privileged API key in the browser. */
+async function staffRequest(payload){
+ const {data:{session},error:sessionError}=await client.auth.getSession();
+ if(sessionError||!session?.access_token)throw Error('ログイン情報が失効しました。再ログインしてください。');
+ const response=await fetch(PROJECT_URL+'/functions/v1/manage-staff',{method:'POST',headers:{
+  'Content-Type':'application/json','apikey':PUBLISHABLE_KEY,'Authorization':'Bearer '+session.access_token
+ },body:JSON.stringify(payload)});
+ let body=null;try{body=await response.json();}catch(_){}
+ if(!response.ok)throw Error(body?.error||'教員管理機能へ接続できません。SupabaseのEdge Function「manage-staff」を公開してください。');
+ return body;
+}
+async function loadStaff(){
+ if(state.profile?.role!=='admin')return;
+ $('staff-service-message').textContent='教員一覧を読み込んでいます…';
+ try{
+  const data=await staffRequest({action:'list'});
+  const list=data?.staff||[];
+  $('staff-list').innerHTML=list.length?list.map(t=>'<div class="staff-row"><strong>'+escapeHtml(t.display_name)+'</strong><span>'+escapeHtml(t.employee_no)+'</span><span class="staff-state">'+(t.is_active?'利用中':'停止中')+'</span><button type="button" class="secondary small" data-staff-toggle="'+escapeHtml(t.id)+'" data-staff-active="'+(t.is_active?'true':'false')+'"'+(t.id===state.user.id?' disabled':'')+'>'+(t.is_active?'利用停止':'再開')+'</button></div>').join(''):'教員はまだ登録されていません。';
+  $('staff-service-message').textContent='教員管理機能に接続しています。';
+ }catch(err){$('staff-service-message').textContent='教員管理機能が利用できません：'+err.message;$('staff-list').textContent='一覧を読み込めませんでした。';}
+}
+$('staff-reload').addEventListener('click',loadStaff);
+$('staff-create-form').addEventListener('submit',async e=>{
+ e.preventDefault();if(state.profile?.role!=='admin')return;
+ const employee_no=$('staff-number').value.trim(),display_name=$('staff-name').value.trim(),password=$('staff-password').value,role=$('staff-role').value;
+ if(!/^\d{6}$/.test(employee_no)||!display_name||password.length<12){notify('職員番号・教員名・パスワード（12文字以上）を確認してください。',true);return;}
+ const button=$('staff-create-button');button.disabled=true;
+ try{await staffRequest({action:'create',employee_no,display_name,password,role});$('staff-create-form').reset();notify('教員を登録しました。初期パスワードを本人に安全に伝えてください。');await loadStaff();}
+ catch(err){fail(err,'教員の登録');}finally{button.disabled=false;}
+});
+$('staff-list').addEventListener('click',async e=>{
+ const button=e.target.closest('[data-staff-toggle]');if(!button)return;
+ const id=button.dataset.staffToggle,is_active=button.dataset.staffActive!=='true';
+ if(!confirm('この教員の利用を'+(is_active?'再開':'停止')+'しますか？'))return;
+ button.disabled=true;try{await staffRequest({action:'set-active',id,is_active});notify('教員の利用状態を変更しました。');await loadStaff();}catch(err){fail(err,'教員の利用状態変更');}finally{button.disabled=false;}
+});
 
 </script>
 </body>
