@@ -322,6 +322,10 @@ body.c2-mode #project-detail-view>.project-context{display:none}
 .csv-preview-scroll th,.csv-preview-scroll td{padding:7px;border:1px solid #dbdee3;text-align:left;max-width:280px;overflow-wrap:anywhere}
 .csv-preview-scroll th{background:#f1f2f4}
 .side-links button{font-size:12px;white-space:nowrap;padding-left:10px}
+
+.project-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+button.project-delete-button{color:#a52c36;border-color:#d9b7ba;background:#fff}
+button.project-delete-button:hover{background:#fff0f1;color:#8d1d25}
 </style>
 </head>
 <body>
@@ -366,7 +370,7 @@ async function showHome(user){
  }catch(e){fail(e,'ユーザー情報の取得');await client.auth.signOut();showLogin();notify('ユーザー情報の取得に失敗しました。管理者にご確認ください。',true,true);}}
 async function loadProjects(){state.projects=await checked(client.from('projects').select('id,name,target_kind,scale_count,created_by,created_at').order('created_at',{ascending:false}).limit(200));renderProjects();$('top-project-select').innerHTML='<option value="">プロジェクトを選択</option>'+state.projects.map(p=>'<option value="'+escapeHtml(p.id)+'">'+escapeHtml(p.name)+'</option>').join('');if(state.project)$('top-project-select').value=state.project.id;}
 function renderProjects(){const el=$('project-list');if(!state.projects.length){el.textContent='プロジェクトはまだありません。';return;}
- el.innerHTML=state.projects.map(p=>`<div class="item flex between"><div><strong>${escapeHtml(p.name)}</strong><div class="meta">${p.target_kind==='group'?'グループ':'個人'}・${Number(p.scale_count)}段階</div></div><button type="button" class="secondary small" data-project="${escapeHtml(p.id)}">開く</button></div>`).join('');}
+ el.innerHTML=state.projects.map(p=>`<div class="item flex between"><div><strong>${escapeHtml(p.name)}</strong><div class="meta">${p.target_kind==='group'?'グループ':'個人'}・${Number(p.scale_count)}段階</div></div><div class="project-actions"><button type="button" class="secondary small" data-project="${escapeHtml(p.id)}">開く</button>${state.profile?.role==='admin'?'<button type="button" class="secondary small project-delete-button" data-delete-project="'+escapeHtml(p.id)+'" aria-label="'+escapeHtml(p.name)+'を削除">削除</button>':''}</div></div>`).join('');}
 async function openProject(id,tab='home'){try{notify('');state.project=state.projects.find(p=>p.id===id);if(!state.project)throw Error('プロジェクトが見つかりません');$('detail-title').textContent=state.project.name;$('detail-subtitle').textContent=(state.project.target_kind==='group'?'グループ':'個人')+'評価・'+state.project.scale_count+'段階';$('top-project-name').textContent=state.project.name;$('top-project-select').value=id;state.expandedCriteria=new Set();state.hasOpenedRubricOnce=false;showOnly('project-detail-view');await reloadProject();renderHome();if(tab==='home'){showOnly('home-view');syncNav('home');}else{setTab(tab);}}catch(e){fail(e,'プロジェクトの読み込み');}}
 async function reloadProject(){const pid=state.project.id;const [targets,criteria,assessments]=await Promise.all([
  checked(client.from('targets').select('id,project_id,name,created_at').eq('project_id',pid).order('created_at')),
@@ -520,7 +524,38 @@ $('logout').addEventListener('click',async()=>{await client.auth.signOut();showL
 $('new-project').addEventListener('click',()=>{notify('');showOnly('project-create-view');});
 for(const b of document.querySelectorAll('[data-back]'))b.addEventListener('click',()=>showOnly('project-list-view'));
 $('back-list').addEventListener('click',async()=>{try{await loadProjects();showOnly('project-list-view');notify('');}catch(e){fail(e,'一覧の取得');}});
-$('project-list').addEventListener('click',e=>{const btn=e.target.closest('[data-project]');if(btn)openProject(btn.dataset.project);});
+$('project-list').addEventListener('click',async e=>{
+ const remove=e.target.closest('[data-delete-project]');
+ if(remove){
+  if(state.profile?.role!=='admin'){notify('プロジェクトの削除は管理者のみ可能です。',true);return;}
+  const project=state.projects.find(p=>p.id===remove.dataset.deleteProject);
+  if(!project)return;
+  const typed=prompt('プロジェクト「'+project.name+'」を完全に削除します。\n登録された評価対象・ルーブリック・評価結果も削除対象となり、元に戻せません。\n\n削除する場合は、プロジェクト名を正確に入力してください。');
+  if(typed===null)return;
+  if(typed!==project.name){notify('入力されたプロジェクト名が一致しないため、削除しませんでした。',true);return;}
+  if(!confirm('最終確認：「'+project.name+'」を完全に削除しますか？この操作は取り消せません。'))return;
+  remove.disabled=true;
+  try{
+   // One database-side DELETE: related rows must use ON DELETE CASCADE.
+   // Never manually delete child records first because a partial failure would lose data.
+   const deleted=await checked(client.from('projects').delete().eq('id',project.id).select('id'));
+   if(!deleted?.some(p=>p.id===project.id))throw Error('削除できませんでした。削除権限を確認してください。');
+   if(state.project?.id===project.id){
+    state.project=null;state.targets=[];state.criteria=[];state.assessments=[];state.scores=[];
+    state.selectedTarget=null;state.selectedAssessment=null;state.selectedScores={};state.resultsTargetId=null;state.dirty=false;state.editCriterionId=null;
+    document.body.classList.remove('c2-mode');
+    $('top-project-name').textContent='評価プロジェクト';
+   }
+   await loadProjects();showOnly('project-list-view');syncNav('settings');
+   notify('「'+project.name+'」を削除しました。');
+  }catch(err){
+   fail(err,'プロジェクトの削除');
+   notify('削除に失敗しました。関連データの削除設定（外部キーのCASCADE）または管理者の削除権限を確認してください。'+(err?.message?' '+err.message:''),true);
+  }finally{remove.disabled=false;}
+  return;
+ }
+ const btn=e.target.closest('[data-project]');if(btn)openProject(btn.dataset.project);
+});
 $('project-form').addEventListener('submit',async e=>{e.preventDefault();const btn=e.target.querySelector('[type=submit]');btn.disabled=true;try{const p={name:$('project-name').value.trim(),target_kind:$('project-kind').value,scale_count:Number($('project-scale').value),created_by:state.user.id};if(!p.name)throw Error('名前を入力してください');const created=await checked(client.from('projects').insert(p).select('id').single());await loadProjects();e.target.reset();await openProject(created.id);notify('プロジェクトを作成しました。');}catch(err){fail(err,'プロジェクト作成');}finally{btn.disabled=false;}});
 $('targets-form').addEventListener('submit',async e=>{e.preventDefault();const lines=$('target-names').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);const names=[...new Set(lines)].filter(x=>!state.targets.some(t=>t.name===x));if(!names.length){notify('追加する新しい名前がありません。',true);return;}const btn=e.target.querySelector('button');btn.disabled=true;try{for(let i=0;i<names.length;i+=100)await checked(client.from('targets').insert(names.slice(i,i+100).map(name=>({project_id:state.project.id,name}))));$('target-names').value='';await reloadProject();notify(names.length+'件を追加しました。');}catch(err){fail(err,'評価対象の登録');}finally{btn.disabled=false;}});
 $('criterion-form').addEventListener('submit',async e=>{e.preventDefault();const btn=$('criterion-submit');btn.disabled=true;try{
