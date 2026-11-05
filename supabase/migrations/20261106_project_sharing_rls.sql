@@ -156,13 +156,13 @@ create policy assignments_delete on public.project_teacher_criteria for delete t
 
 -- The ownership identity must not be transferable through a generic project update.
 create or replace function public.protect_project_creator()
-returns trigger language plpgsql set search_path=public as $
+returns trigger language plpgsql set search_path=public as $$
 begin
  if new.created_by is distinct from old.created_by then
   raise exception 'プロジェクトの作成者は変更できません';
  end if;
  return new;
-end $;
+end $$;
 drop trigger if exists protect_project_creator on public.projects;
 create trigger protect_project_creator before update on public.projects
  for each row execute function public.protect_project_creator();
