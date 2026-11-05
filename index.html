@@ -361,6 +361,12 @@ button.project-delete-button:hover{background:#fff0f1;color:#8d1d25}
 #participants-add-form>label{margin-top:14px}#participants-add-form>input,#participants-add-form>select{width:100%}
 #participants-add{margin-top:13px}
 @media(max-width:650px){.participant-row{grid-template-columns:1fr auto}.participant-row select{grid-column:1}}
+
+body.read-only-project #tab-targets .subpanel,body.read-only-project #tab-targets .csv-import-box,body.read-only-project #tab-targets [data-target-edit],body.read-only-project #tab-targets [data-target-remove]{display:none!important}
+body.read-only-project #tab-criteria .rubric-setup,body.read-only-project #tab-criteria .csv-import-box,body.read-only-project #tab-criteria .criterion-editor,body.read-only-project #tab-criteria #new-criterion,body.read-only-project #tab-criteria [data-delete-criterion]{display:none!important}
+body.read-only-project #tab-criteria .editor-grid{display:block}
+body.read-only-project #tab-criteria .criterion-sidebar{border:0;background:transparent;max-width:none}
+body.read-only-project #tab-criteria [data-edit-criterion]{cursor:default}
 </style>
 </head>
 <body>
@@ -459,6 +465,7 @@ async function reloadProject(){const pid=state.project.id;const [targets,criteri
  $('assignment-nav').classList.toggle('hidden',!canManageProject());
  $('participants-tab-button').classList.toggle('hidden',!isProjectOwner());
  $('assignment-tab-button').classList.toggle('hidden',!canManageProject());
+ document.body.classList.toggle('read-only-project',!canManageProject());
 renderTargetSelect();renderResults();renderDescriptorInputs(state.criteria.find(c=>c.id===state.editCriterionId));$('rubric-scale').value=String(state.project.scale_count);renderHome();}
 function renderTargets(){
  const q=($('target-search')?.value||'').trim().toLowerCase(),el=$('targets-list');
@@ -850,7 +857,7 @@ async function staffRequest(payload){
 async function loadStaff(){
  const status=$('staff-service-message');
  status.textContent='接続を確認しています…（'+new Date().toLocaleTimeString('ja-JP')+'）';
- if(state.profile?.role!=='admin'){status.textContent='このアカウントには管理者権限がありません。';return;}
+ if(state.profile?.role!=='admin'){status.textContent='このアカウントにはシステム管理者権限がありません。';return;}
  try{
   const data=await staffRequest({action:'list'});
   const list=data?.staff||[];
@@ -964,7 +971,8 @@ $('assignment-save').addEventListener('click',async()=>{
 
 async function loadParticipants(){
  if(!state.project)return;
- try{state.members=await checked(client.from('project_members').select('project_id,user_id,role').eq('project_id',state.project.id));renderParticipants();}
+ try{state.members=await checked(client.from('project_members').select('project_id,user_id,role').eq('project_id',state.project.id));
+ const ids=[state.project.created_by,...state.members.map(m=>m.user_id)];state.assignmentTeachers=await checked(client.from('profiles').select('id,display_name,employee_no,is_active').in('id',[...new Set(ids)]));renderParticipants();}
  catch(e){const p=$('participants-status');p.classList.remove('hidden');p.textContent='参加教員を取得できません：'+e.message;}
 }
 function renderParticipants(){
