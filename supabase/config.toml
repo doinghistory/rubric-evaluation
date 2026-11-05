@@ -1,0 +1,4 @@
+[functions.manage-staff]
+verify_jwt = false
+# The function validates the user access token with auth.getUser()
+# and checks profiles.role=admin and is_active=true before every privileged action.
