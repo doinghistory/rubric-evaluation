@@ -394,89 +394,7 @@ button.project-delete-button:hover{background:#fff0f1;color:#8d1d25}
 <div id="results-detail" class="hidden"><div class="results-detail-bar"><button type="button" class="secondary small" id="results-back">← 評価一覧に戻る</button><span id="results-detail-position" class="muted"></span><div class="results-detail-nav"><button type="button" class="secondary small" id="results-prev">〈 前の対象</button><button type="button" class="secondary small" id="results-next">次の対象 〉</button></div></div><div class="results-detail-title"><h2 id="results-detail-name"></h2><div class="results-total-score"><span>総合平均</span><strong id="results-detail-average">—</strong><span id="results-detail-teachers"></span></div></div><div class="results-scroll"><table class="results-table results-detail-table"><thead id="results-detail-head"></thead><tbody id="results-detail-body"></tbody></table></div><section class="results-comments"><h3>教員別コメント</h3><div id="results-detail-comments"></div></section></div>
 </div></div></div></div></section>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js">
-function assignedCriteriaFor(teacherId){
- if(!state.assignmentReady)return state.criteria;
- const rows=state.assignments.filter(x=>x.teacher_id===teacherId);
- if(!rows.length)return state.criteria;
- const ids=new Set(rows.map(x=>x.criterion_id));
- return state.criteria.filter(c=>ids.has(c.id));
-}
-function isCriterionAssigned(teacherId,criterionId){
- return assignedCriteriaFor(teacherId).some(c=>c.id===criterionId);
-}
-async function loadAssignmentTeachers(){
- if(state.profile?.role!=='admin')return;
- try{
-  state.assignmentTeachers=await checked(client.from('profiles').select('id,display_name,employee_no,role,is_active').eq('is_active',true).order('employee_no').limit(1000));
-  renderAssignmentSettings();
- }catch(err){$('assignment-notice').classList.remove('hidden');$('assignment-notice').textContent='教員一覧の取得に失敗しました：'+(err?.message||'不明なエラー');}
-}
-function renderAssignmentSettings(){
- const tab=$('assignment-tab-button');
- const admin=state.profile?.role==='admin';
- tab.classList.toggle('hidden',!admin);
- const notice=$('assignment-notice'),save=$('assignment-save');
- if(!admin){return;}
- if(!state.assignmentReady){
-  notice.classList.remove('hidden');
-  notice.textContent='担当設定の準備が必要です。SupabaseのSQL Editorで評価担当用のSQLを実行してください。'+(state.assignmentError?'（'+state.assignmentError+'）':'');
- }else{notice.classList.add('hidden');}
- const people=state.assignmentTeachers;
- $('assignment-teacher-list').innerHTML=people.length?people.map(t=>
-  '<button type="button" class="assignment-person'+(t.id===state.assignmentTeacherId?' active':'')+'" data-assignment-teacher="'+escapeHtml(t.id)+'">'+escapeHtml(t.display_name)+'<small>'+escapeHtml(t.employee_no)+'</small></button>'
- ).join(''):'<p class="muted">教員を読み込んでいます。</p>';
- const selected=people.find(t=>t.id===state.assignmentTeacherId);
- if(!selected){
-  $('assignment-teacher-name').textContent='教員を選んでください';
-  $('assignment-criterion-list').innerHTML='';
-  $('assignment-count').textContent='';
-  save.disabled=true;
-  return;
- }
- $('assignment-teacher-name').textContent=selected.display_name;
- const assigned=state.assignmentDraft;
- $('assignment-criterion-list').innerHTML=state.criteria.length?state.criteria.map(c=>
-  '<label class="assignment-check"><input type="checkbox" data-assignment-criterion="'+escapeHtml(c.id)+'"'+(assigned.has(c.id)?' checked':'')+'><span><strong>'+escapeHtml(c.title)+'</strong>'+(c.description?'<small>'+escapeHtml(c.description)+'</small>':'')+'</span><em>'+(assigned.has(c.id)?'担当':'対象外')+'</em></label>'
- ).join(''):'<p class="muted">先にルーブリック項目を登録してください。</p>';
- $('assignment-count').textContent='担当する項目：'+assigned.size+' / '+state.criteria.length;
- $('assignment-hint').textContent=assigned.size===state.criteria.length?'全項目を担当します。':'選択した項目だけを評価できます。';
- save.disabled=!state.assignmentReady||!state.criteria.length||!assigned.size;
- $('assignment-all').disabled=!state.assignmentReady;$('assignment-none').disabled=!state.assignmentReady;
-}
-function selectAssignmentTeacher(id){
- const teacher=state.assignmentTeachers.find(t=>t.id===id);
- if(!teacher)return;
- state.assignmentTeacherId=id;
- state.assignmentDraft=new Set(assignedCriteriaFor(id).map(c=>c.id));
- renderAssignmentSettings();
-}
-$('assignment-teacher-list').addEventListener('click',e=>{
- const b=e.target.closest('[data-assignment-teacher]');if(b)selectAssignmentTeacher(b.dataset.assignmentTeacher);
-});
-$('assignment-criterion-list').addEventListener('change',e=>{
- const input=e.target.closest('[data-assignment-criterion]');if(!input)return;
- if(input.checked)state.assignmentDraft.add(input.dataset.assignmentCriterion);
- else state.assignmentDraft.delete(input.dataset.assignmentCriterion);
- renderAssignmentSettings();
-});
-$('assignment-all').addEventListener('click',()=>{state.assignmentDraft=new Set(state.criteria.map(c=>c.id));renderAssignmentSettings();});
-$('assignment-none').addEventListener('click',()=>{state.assignmentDraft.clear();renderAssignmentSettings();});
-$('assignment-save').addEventListener('click',async()=>{
- if(state.profile?.role!=='admin'||!state.assignmentReady||!state.assignmentTeacherId)return;
- const ids=state.criteria.filter(c=>state.assignmentDraft.has(c.id)).map(c=>c.id);
- if(!ids.length){notify('担当する項目を1つ以上選択してください。',true);return;}
- const button=$('assignment-save');button.disabled=true;
- try{
-  await checked(client.rpc('set_project_teacher_criteria',{p_project_id:state.project.id,p_teacher_id:state.assignmentTeacherId,p_criterion_ids:ids}));
-  state.assignments=await checked(client.from('project_teacher_criteria').select('project_id,teacher_id,criterion_id').eq('project_id',state.project.id));
-  notify('評価担当の設定を保存しました。');
-  renderAssignmentSettings();
-  renderResults();
-  if(state.tab==='evaluate')renderEvaluation();
- }catch(error){fail(error,'評価担当の保存');}finally{button.disabled=false;}
-});
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 'use strict';
 const PROJECT_URL='https://cdoydtconrygubkyeyym.supabase.co';
@@ -924,6 +842,90 @@ $('staff-list').addEventListener('click',async e=>{
  const id=button.dataset.staffToggle,is_active=button.dataset.staffActive!=='true';
  if(!confirm('この教員の利用を'+(is_active?'再開':'停止')+'しますか？'))return;
  button.disabled=true;try{await staffRequest({action:'set-active',id,is_active});notify('教員の利用状態を変更しました。');await loadStaff();}catch(err){fail(err,'教員の利用状態変更');}finally{button.disabled=false;}
+});
+
+
+
+function assignedCriteriaFor(teacherId){
+ if(!state.assignmentReady)return state.criteria;
+ const rows=state.assignments.filter(x=>x.teacher_id===teacherId);
+ if(!rows.length)return state.criteria;
+ const ids=new Set(rows.map(x=>x.criterion_id));
+ return state.criteria.filter(c=>ids.has(c.id));
+}
+function isCriterionAssigned(teacherId,criterionId){
+ return assignedCriteriaFor(teacherId).some(c=>c.id===criterionId);
+}
+async function loadAssignmentTeachers(){
+ if(state.profile?.role!=='admin')return;
+ try{
+  state.assignmentTeachers=await checked(client.from('profiles').select('id,display_name,employee_no,role,is_active').eq('is_active',true).order('employee_no').limit(1000));
+  renderAssignmentSettings();
+ }catch(err){$('assignment-notice').classList.remove('hidden');$('assignment-notice').textContent='教員一覧の取得に失敗しました：'+(err?.message||'不明なエラー');}
+}
+function renderAssignmentSettings(){
+ const tab=$('assignment-tab-button');
+ const admin=state.profile?.role==='admin';
+ tab.classList.toggle('hidden',!admin);
+ const notice=$('assignment-notice'),save=$('assignment-save');
+ if(!admin){return;}
+ if(!state.assignmentReady){
+  notice.classList.remove('hidden');
+  notice.textContent='担当設定の準備が必要です。SupabaseのSQL Editorで評価担当用のSQLを実行してください。'+(state.assignmentError?'（'+state.assignmentError+'）':'');
+ }else{notice.classList.add('hidden');}
+ const people=state.assignmentTeachers;
+ $('assignment-teacher-list').innerHTML=people.length?people.map(t=>
+  '<button type="button" class="assignment-person'+(t.id===state.assignmentTeacherId?' active':'')+'" data-assignment-teacher="'+escapeHtml(t.id)+'">'+escapeHtml(t.display_name)+'<small>'+escapeHtml(t.employee_no)+'</small></button>'
+ ).join(''):'<p class="muted">教員を読み込んでいます。</p>';
+ const selected=people.find(t=>t.id===state.assignmentTeacherId);
+ if(!selected){
+  $('assignment-teacher-name').textContent='教員を選んでください';
+  $('assignment-criterion-list').innerHTML='';
+  $('assignment-count').textContent='';
+  save.disabled=true;
+  return;
+ }
+ $('assignment-teacher-name').textContent=selected.display_name;
+ const assigned=state.assignmentDraft;
+ $('assignment-criterion-list').innerHTML=state.criteria.length?state.criteria.map(c=>
+  '<label class="assignment-check"><input type="checkbox" data-assignment-criterion="'+escapeHtml(c.id)+'"'+(assigned.has(c.id)?' checked':'')+'><span><strong>'+escapeHtml(c.title)+'</strong>'+(c.description?'<small>'+escapeHtml(c.description)+'</small>':'')+'</span><em>'+(assigned.has(c.id)?'担当':'対象外')+'</em></label>'
+ ).join(''):'<p class="muted">先にルーブリック項目を登録してください。</p>';
+ $('assignment-count').textContent='担当する項目：'+assigned.size+' / '+state.criteria.length;
+ $('assignment-hint').textContent=assigned.size===state.criteria.length?'全項目を担当します。':'選択した項目だけを評価できます。';
+ save.disabled=!state.assignmentReady||!state.criteria.length||!assigned.size;
+ $('assignment-all').disabled=!state.assignmentReady;$('assignment-none').disabled=!state.assignmentReady;
+}
+function selectAssignmentTeacher(id){
+ const teacher=state.assignmentTeachers.find(t=>t.id===id);
+ if(!teacher)return;
+ state.assignmentTeacherId=id;
+ state.assignmentDraft=new Set(assignedCriteriaFor(id).map(c=>c.id));
+ renderAssignmentSettings();
+}
+$('assignment-teacher-list').addEventListener('click',e=>{
+ const b=e.target.closest('[data-assignment-teacher]');if(b)selectAssignmentTeacher(b.dataset.assignmentTeacher);
+});
+$('assignment-criterion-list').addEventListener('change',e=>{
+ const input=e.target.closest('[data-assignment-criterion]');if(!input)return;
+ if(input.checked)state.assignmentDraft.add(input.dataset.assignmentCriterion);
+ else state.assignmentDraft.delete(input.dataset.assignmentCriterion);
+ renderAssignmentSettings();
+});
+$('assignment-all').addEventListener('click',()=>{state.assignmentDraft=new Set(state.criteria.map(c=>c.id));renderAssignmentSettings();});
+$('assignment-none').addEventListener('click',()=>{state.assignmentDraft.clear();renderAssignmentSettings();});
+$('assignment-save').addEventListener('click',async()=>{
+ if(state.profile?.role!=='admin'||!state.assignmentReady||!state.assignmentTeacherId)return;
+ const ids=state.criteria.filter(c=>state.assignmentDraft.has(c.id)).map(c=>c.id);
+ if(!ids.length){notify('担当する項目を1つ以上選択してください。',true);return;}
+ const button=$('assignment-save');button.disabled=true;
+ try{
+  await checked(client.rpc('set_project_teacher_criteria',{p_project_id:state.project.id,p_teacher_id:state.assignmentTeacherId,p_criterion_ids:ids}));
+  state.assignments=await checked(client.from('project_teacher_criteria').select('project_id,teacher_id,criterion_id').eq('project_id',state.project.id));
+  notify('評価担当の設定を保存しました。');
+  renderAssignmentSettings();
+  renderResults();
+  if(state.tab==='evaluate')renderEvaluation();
+ }catch(error){fail(error,'評価担当の保存');}finally{button.disabled=false;}
 });
 
 </script>
