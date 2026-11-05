@@ -499,10 +499,10 @@ async function saveEvaluation(){
  try{
   const comment=$('evaluate-comment').value.trim();
   // 同一プロジェクト・評価対象・教員の既存記録を更新する。
-  let a=state.assessments.find(x=>x.project_id===projectId&&x.target_id===targetId&&x.teacher_id===teacherId);
+  const current=await checked(client.from('assessments').select('id,project_id,target_id,teacher_id,comment,created_at').eq('project_id',projectId).eq('target_id',targetId).eq('teacher_id',teacherId).order('created_at',{ascending:false}).limit(1));let a=current[0]||null;
   if(a){await checked(client.from('assessments').update({comment}).eq('id',a.id).eq('teacher_id',teacherId).select('id').single());}
   else{a=await checked(client.from('assessments').insert({project_id:projectId,target_id:targetId,teacher_id:teacherId,comment}).select('id').single());}
-  const existing=state.scores.filter(x=>x.assessment_id===a.id);
+  const existing=await checked(client.from('assessment_scores').select('id,assessment_id,criterion_id,score').eq('assessment_id',a.id));
   for(const c of state.criteria){
    const item=existing.find(x=>x.criterion_id===c.id);
    if(item)await checked(client.from('assessment_scores').update({score:scores[c.id]}).eq('id',item.id).select('id').single());
@@ -516,8 +516,8 @@ async function saveEvaluation(){
  finally{state.saving=false;btn.disabled=false;$('evaluate-target').disabled=false;}
 }
 function csvCell(x){const s=String(x??'');return '"'+s.replace(/"/g,'""')+'"';}
-function exportCsv(){if(!state.project)return;const names=new Map(state.targets.map(t=>[t.id,t.name]));const headers=['プロジェクト','評価対象','評価者ID','評価日時',...state.criteria.map(c=>c.title),'コメント'];const lines=[headers];
- for(const a of state.assessments){const scoreMap=new Map(state.scores.filter(s=>s.assessment_id===a.id).map(s=>[s.criterion_id,s.score]));lines.push([state.project.name,names.get(a.target_id)||'',a.teacher_id,a.created_at?new Date(a.created_at).toLocaleString('ja-JP'):'',...state.criteria.map(c=>scoreMap.get(c.id)??''),a.comment||'']);}
+function exportCsv(){if(!state.project)return;const names=new Map(state.targets.map(t=>[t.id,t.name]));const headers=['プロジェクト','評価対象','評価者名','評価者ID','評価日時',...state.criteria.map(c=>c.title),'コメント'];const lines=[headers];
+ for(const a of state.assessments){const scoreMap=new Map(state.scores.filter(s=>s.assessment_id===a.id).map(s=>[s.criterion_id,s.score]));lines.push([state.project.name,names.get(a.target_id)||'',teacherDisplayName(a.teacher_id),a.teacher_id,a.created_at?new Date(a.created_at).toLocaleString('ja-JP'):'',...state.criteria.map(c=>scoreMap.get(c.id)??''),a.comment||'']);}
  const body='\uFEFF'+lines.map(row=>row.map(csvCell).join(',')).join('\r\n');const blob=new Blob([body],{type:'text/csv;charset=utf-8'});const u=URL.createObjectURL(blob);const link=document.createElement('a');link.href=u;link.download='評価結果_'+state.project.name.replace(/[\\/:*?"<>|]/g,'_')+'.csv';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);}
 $('login-form').addEventListener('submit',async e=>{e.preventDefault();const no=$('employee').value.trim();if(!/^\d{6}$/.test(no)){notify('職員番号は6桁の数字で入力してください。',true,true);return;}const btn=$('login-button');btn.disabled=true;notify('ログインしています…',false,true);try{const email=`staff${no}@rubric-login.example.com`;const data=await checked(client.auth.signInWithPassword({email,password:$('password').value}));notify('',false,true);await showHome(data.user);}catch(e){console.error(e);notify('ログインできませんでした。職員番号とパスワードを確認してください。',true,true);}finally{btn.disabled=false;}});
 $('logout').addEventListener('click',async()=>{await client.auth.signOut();showLogin();notify('ログアウトしました。',false,true);});
