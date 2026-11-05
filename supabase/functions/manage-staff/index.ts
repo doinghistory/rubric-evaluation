@@ -59,8 +59,8 @@ Deno.serve(async (req: Request) => {
     const displayName = String(payload.display_name || '').trim();
     const password = typeof payload.password === 'string' ? payload.password : '';
     const role = payload.role;
-    if (!/^\d{6}$/.test(employeeNo) || !displayName || displayName.length > 80 || password.length < 12 || password.length > 128 || !['teacher', 'admin'].includes(String(role))) {
-      return response({ error: '職員番号・名前・権限・パスワード（12文字以上）を確認してください。' }, 400);
+    if (!/^\d{6}$/.test(employeeNo) || !displayName || displayName.length > 80 || password.length < 5 || password.length > 128 || !['teacher', 'admin'].includes(String(role))) {
+      return response({ error: '職員番号・名前・権限・パスワード（5文字以上）を確認してください。' }, 400);
     }
     const { data: existing, error: checkError } = await adminClient.from('profiles').select('id').eq('employee_no', employeeNo).limit(1);
     if (checkError) return response({ error: '職員番号の確認に失敗しました。' }, 500);
