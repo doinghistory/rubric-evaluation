@@ -163,6 +163,41 @@ body.c2-mode .rubric-detail-option.selected{box-shadow:inset 0 0 0 2px var(--sch
 body.c2-mode #save-evaluation{background:var(--school-gold);border-color:#aa842d}
 body.c2-mode #save-evaluation:hover{background:var(--school-gold-hover)}
 @media(max-width:700px){main{padding:0 10px}.panel{padding:14px}header{font-size:15px}}
+
+/* Reference C-2 visual spec: gold opened section, white detailed rubric */
+body.c2-mode{background:#faf8f4}
+body.c2-mode #tab-evaluate{border:1px solid #d1d3d8;border-radius:7px;background:#fff;padding:14px 16px;box-shadow:0 2px 10px #142d4b0c}
+body.c2-mode .c2-toolbar{gap:9px;min-height:40px;margin-bottom:14px}
+body.c2-mode .c2-toolbar label{font-size:13px;font-weight:700}
+body.c2-mode .c2-toolbar select{height:37px;max-width:475px;font-size:13px;border-radius:5px}
+body.c2-mode #expand-all,body.c2-mode #collapse-all{display:inline-flex;align-items:center;min-height:34px;height:34px;padding:5px 12px;border:1px solid #c6ccd6;background:#fff;color:#1d2d46;border-radius:5px;font-size:12px;white-space:nowrap}
+body.c2-mode #expand-all:hover,body.c2-mode #collapse-all:hover{background:#f4f5f6}
+body.c2-mode .rubric-list{border:0;background:transparent;border-radius:0;overflow:visible}
+body.c2-mode .rubric-item{margin-bottom:7px;border:1px solid #d1d5dd;border-radius:7px;overflow:hidden;background:#fff}
+body.c2-mode .rubric-row{min-height:46px;height:auto;display:flex;align-items:center;flex-direction:row;background:#f8f8f8;padding:3px 10px;gap:10px}
+body.c2-mode .rubric-item:has(.rubric-detail:not(.hidden))>.rubric-row{background:#f7e5bd}
+body.c2-mode .rubric-item:not(:has(.rubric-detail:not(.hidden)))>.rubric-row{background:#f8f8f8}
+body.c2-mode .rubric-toggle{flex:1;min-width:0;min-height:37px;display:flex;align-items:center;font-size:15px;line-height:1.3;font-weight:700;color:#1b2940}
+body.c2-mode .rubric-arrow{font-size:24px;width:22px;color:#182b48;font-weight:400}
+body.c2-mode .rubric-picks{gap:2px;align-items:center;flex:none}
+body.c2-mode .rubric-picks button{width:74px;min-width:0;flex:none;height:36px;min-height:36px;border:1px solid #bfc6d1;border-radius:5px;background:#fff;color:#172336;font-size:16px;font-weight:700;padding:4px 8px}
+body.c2-mode .rubric-picks button.selected{background:#172f53;color:#fff;border-color:#172f53}
+body.c2-mode .rubric-detail{background:#fff;border:0;padding:10px 12px 12px}
+body.c2-mode .rubric-detail-grid{border:1px solid #cdd3dc;border-radius:5px;gap:0;overflow:hidden}
+body.c2-mode .rubric-detail-option{min-height:125px;display:flex;flex-direction:column;gap:10px;background:#fff;border:0;border-right:1px solid #cdd3dc;border-radius:0;color:#1e2939;padding:0 12px 12px;font-size:13px;line-height:1.6}
+body.c2-mode .rubric-detail-option:last-child{border-right:0}
+body.c2-mode .rubric-detail-option.selected{background:#fff;box-shadow:inset 0 0 0 2px #172f53;border-right:1px solid #cdd3dc}
+body.c2-mode .rubric-detail-option:hover{background:#fafbfd}
+body.c2-mode .rubric-level{margin:0 -12px;padding:8px;background:#edf0f4;color:#17263e;border-bottom:1px solid #cdd3dc;display:block;text-align:center;font-size:14px;font-weight:700;line-height:1.2}
+body.c2-mode .rubric-detail-option.selected .rubric-level{background:#e4e9f0;color:#172f53}
+body.c2-mode .c2-footer{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(200px,1fr);gap:0 16px;align-items:end;margin-top:16px}
+body.c2-mode .c2-footer label{grid-column:1;grid-row:1;font-size:14px;font-weight:700;margin:0 0 7px}
+body.c2-mode #evaluate-comment{grid-column:1;grid-row:2;min-height:80px;height:80px;padding:12px;font-size:13px;border-radius:6px;background:#fbfbfd}
+body.c2-mode #save-panel{grid-column:2;grid-row:2;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-end;gap:7px;position:static;background:transparent;border:0;box-shadow:none;border-radius:0;padding:0;margin:0}
+body.c2-mode #save-panel.saved,body.c2-mode #save-panel.dirty{background:transparent;border:0}
+body.c2-mode #save-evaluation{height:50px;min-height:50px;width:100%;min-width:0;background:#b58a20;color:white;border:1px solid #ae831e;border-radius:6px;font-size:17px;font-weight:700;padding:8px 12px}
+body.c2-mode #save-evaluation:hover{background:#9e771c}
+@media(max-width:800px){body.c2-mode .c2-toolbar{flex-wrap:wrap}body.c2-mode .c2-evaluator{display:none}body.c2-mode .rubric-row{flex-direction:column;align-items:stretch;padding:8px 10px}body.c2-mode .rubric-picks button{width:auto;flex:1}body.c2-mode .rubric-detail-grid{grid-template-columns:1fr}body.c2-mode .rubric-detail-option{min-height:0;border-right:0;border-bottom:1px solid #cdd3dc}body.c2-mode .c2-footer{grid-template-columns:1fr;gap:8px}body.c2-mode .c2-footer label,body.c2-mode #evaluate-comment,body.c2-mode #save-panel{grid-column:1;grid-row:auto}}
 </style>
 </head>
 <body>
@@ -175,7 +210,7 @@ body.c2-mode #save-evaluation:hover{background:var(--school-gold-hover)}
 <div id="project-detail-view" class="hidden"><div class="panel"><div class="flex between"><div><button id="back-list" type="button" class="secondary small">← 一覧へ</button><h1 id="detail-title" style="margin:14px 0 3px"></h1><div id="detail-subtitle" class="muted"></div></div><button id="export-csv" class="secondary" type="button">CSV出力</button></div></div><div class="tabs"><button type="button" data-tab="targets" class="active">評価対象</button><button type="button" data-tab="criteria">ルーブリック</button><button type="button" data-tab="evaluate">評価入力</button><button type="button" data-tab="results">評価一覧</button></div>
 <div class="panel" id="tab-targets"><h2>評価対象の登録</h2><p class="muted">生徒名・グループ名を1行に1件ずつ入力してください。</p><form id="targets-form"><label for="target-names">名前（複数行可）</label><textarea id="target-names" placeholder="生徒A&#10;生徒B&#10;生徒C" required></textarea><div class="actions"><button type="submit">追加する</button></div></form><h3>登録済み</h3><div id="targets-list" class="muted"></div></div>
 <div class="panel hidden" id="tab-criteria"><h2>ルーブリックの作成</h2><p class="muted">各評価段階の基準を記入します。1が最も低い段階、最大値が最も高い段階です。</p><form id="criterion-form"><label for="criterion-title">評価項目</label><input id="criterion-title" required placeholder="例：資料の活用"><label for="criterion-description">説明（任意）</label><input id="criterion-description" placeholder="評価の観点を記入"><div id="criterion-descriptors" class="grid"></div><div class="actions"><button type="submit">評価項目を追加</button></div></form><h3>登録済みの評価項目</h3><div id="criteria-list" class="muted"></div></div>
-<div class="panel hidden" id="tab-evaluate"><div class="c2-toolbar"><label for="evaluate-target">評価対象グループ</label><select id="evaluate-target"></select><span class="c2-evaluator">評価者：<span id="evaluate-teacher-label"></span></span><button type="button" class="secondary small" id="expand-all">すべて展開</button></div><div id="evaluation-body"></div><div class="c2-footer"><label for="evaluate-comment">総合コメント（任意）</label><textarea id="evaluate-comment" placeholder="評価の根拠や気づきを入力"></textarea><div id="save-panel" class="save-panel"><div><div id="save-status" class="save-status" role="status" aria-live="polite">未保存</div><p class="save-help">再保存すると前の評価を上書きします。</p></div><button type="button" id="save-evaluation">評価を保存</button></div></div></div>
+<div class="panel hidden" id="tab-evaluate"><div class="c2-toolbar"><label for="evaluate-target">評価対象グループ</label><select id="evaluate-target"></select><span class="c2-evaluator">評価者：<span id="evaluate-teacher-label"></span></span><button type="button" class="secondary small" id="expand-all">すべて展開</button><button type="button" class="secondary small" id="collapse-all">すべて折りたたむ</button></div><div id="evaluation-body"></div><div class="c2-footer"><label for="evaluate-comment">総合コメント（任意）</label><textarea id="evaluate-comment" placeholder="評価の根拠や気づきを入力"></textarea><div id="save-panel" class="save-panel"><div><div id="save-status" class="save-status" role="status" aria-live="polite">未保存</div><p class="save-help">再保存すると前の評価を上書きします。</p></div><button type="button" id="save-evaluation">評価を保存</button></div></div></div>
 <div class="panel hidden" id="tab-results"><h2>評価一覧</h2><p class="muted">評価者ごとの記録を表示します。全件をダウンロードするには「CSV出力」を押してください。</p><div id="results-list"></div></div></div></section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -294,6 +329,12 @@ $('expand-all').addEventListener('click',()=>{
  for(const detail of document.querySelectorAll('[data-detail]'))detail.classList.toggle('hidden',!open);
  for(const t of document.querySelectorAll('[data-toggle]')){t.setAttribute('aria-expanded',String(open));t.querySelector('.rubric-arrow').textContent=open?'⌄':'›';}
  $('expand-all').textContent=open?'すべて折りたたむ':'すべて展開';
+});
+$('collapse-all').addEventListener('click',()=>{
+ state.expandedCriteria=new Set();
+ for(const d of document.querySelectorAll('[data-detail]'))d.classList.add('hidden');
+ for(const t of document.querySelectorAll('[data-toggle]')){t.setAttribute('aria-expanded','false');t.querySelector('.rubric-arrow').textContent='›';}
+ $('expand-all').textContent='すべて展開';
 });
 $('evaluate-comment').addEventListener('input',markDirty);
 $('save-evaluation').addEventListener('click',saveEvaluation);$('export-csv').addEventListener('click',exportCsv);
