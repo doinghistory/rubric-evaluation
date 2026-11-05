@@ -99,6 +99,70 @@ body.c2-mode #save-evaluation{background:#b99030;color:#fff;border:1px solid #ad
 body.c2-mode #save-evaluation:hover{background:#a27c26}
 body.c2-mode #app-notice{font-size:11px;padding:5px 8px;margin:0 0 5px}
 @media(max-width:700px){body.c2-mode .c2-evaluator{display:none}body.c2-mode .rubric-picks button{width:39px}body.c2-mode .rubric-detail-grid{grid-template-columns:1fr}body.c2-mode .rubric-detail-option{min-height:0;border:0;border-bottom:1px solid #ddd}body.c2-mode .c2-toolbar{flex-wrap:wrap}body.c2-mode .rubric-row{min-height:34px}}
+
+/* Shared design system: C-2 reference applied consistently to every page */
+:root{
+ --school-navy:#172e50;--school-navy-hover:#284264;
+ --school-gold:#b99030;--school-gold-hover:#a17a26;
+ --school-paper:#faf9f7;--school-white:#fff;
+ --school-ink:#222936;--school-muted:#737b87;
+ --school-line:#d2d4d9;--school-soft:#f4f4f5;
+ font-family:'UD デジタル 教科書体 N-R','UD デジタル 教科書体 NK-R','UD Digi Kyokasho N-R','UD Digi Kyokasho NK-R','UD Digi Kyokasho NP-R',Meiryo,sans-serif;
+ color:var(--school-ink);background:var(--school-paper);
+}
+html,body,button,input,select,textarea{font-family:'UD デジタル 教科書体 N-R','UD デジタル 教科書体 NK-R','UD Digi Kyokasho N-R','UD Digi Kyokasho NK-R','UD Digi Kyokasho NP-R',Meiryo,sans-serif}
+body{background:var(--school-paper);color:var(--school-ink)}
+header{background:var(--school-navy);color:#fff;border-bottom:0;min-height:42px;padding:10px max(18px,calc((100vw - 1120px)/2));font-size:17px}
+main{max-width:1140px;margin:15px auto;padding:0 14px 48px}
+.panel{background:var(--school-white);border:1px solid var(--school-line);border-radius:4px;box-shadow:none;padding:17px 19px;margin-bottom:10px}
+h1{font-size:19px;margin-bottom:12px;color:#1c2e49}
+h2{font-size:16px;color:#1c2e49}
+h3{font-size:14px}
+.muted,.meta{color:var(--school-muted)}
+label{color:#313943;font-size:12px}
+input,select,textarea{border:1px solid var(--school-line);border-radius:3px;background:#fff;color:var(--school-ink);font-size:14px}
+input:focus,select:focus,textarea:focus{outline:2px solid #c9b278;outline-offset:0}
+button{border-radius:3px;background:var(--school-navy);border:1px solid var(--school-navy);color:#fff;min-height:35px;padding:7px 13px;font-size:13px}
+button:hover{background:var(--school-navy-hover)}
+button.secondary,.secondary{background:#fff;color:var(--school-navy);border:1px solid #bcc2cc}
+button.secondary:hover,.secondary:hover{background:#f4f5f6}
+button.small{font-size:12px;min-height:29px;padding:4px 10px}
+.tabs{gap:4px;margin-bottom:10px;border-bottom:1px solid var(--school-line)}
+.tabs button{background:#fff;border:1px solid var(--school-line);border-radius:3px 3px 0 0;color:#3b4553;padding:6px 13px;min-height:33px;font-size:12px}
+.tabs button:hover{background:#f2f3f4}
+.tabs button.active,.tabs button.active:hover{background:var(--school-navy);border-color:var(--school-navy);color:#fff}
+.notice{background:#f7f7f6;border-left:3px solid var(--school-gold);border-radius:0;color:#3b4451;margin:8px 0;padding:8px 11px;font-size:12px}
+.notice.error{border-color:#c45f5f;background:#fff8f8;color:#9e2634}
+.item{padding:10px 0;border-color:#e1e2e5}
+.pill{border-color:#d7d8dd;color:#586573}
+.table-wrap{border-color:var(--school-line)}
+thead th{background:#f3f3f4}
+th,td{border-color:#e1e1e4}
+#project-create-view,#project-list-view,#tab-targets,#tab-criteria,#tab-results{background:#fff}
+#project-list .item button{background:#fff;color:var(--school-navy);border-color:#bbc2ca}
+#project-list .item button:hover{background:#f4f5f6}
+#tab-targets textarea{min-height:82px}
+#tab-criteria #criterion-descriptors textarea{min-height:90px}
+#tab-criteria .item,#tab-targets .item,#tab-results .item{background:#fff}
+#project-form button[type=submit],#targets-form button[type=submit],#criterion-form button[type=submit]{background:var(--school-navy);border-color:var(--school-navy)}
+#project-form button[type=submit]:hover,#targets-form button[type=submit]:hover,#criterion-form button[type=submit]:hover{background:var(--school-navy-hover)}
+#export-csv{background:#fff;color:var(--school-navy);border-color:#aeb8c5}
+#export-csv:hover{background:#f2f4f6}
+.save-panel{background:#fff;box-shadow:none;border:1px solid var(--school-line)}
+.save-panel.saved{background:#f7faf7;border-color:#d6e0d9}
+.save-panel.dirty{background:#fffdf7;border-color:#ded1b1}
+#save-evaluation{background:var(--school-gold);border-color:#aa842d;color:#fff}
+#save-evaluation:hover{background:var(--school-gold-hover)}
+/* Evaluate view and all other views now use the same shared font, colors and controls. */
+body.c2-mode{background:var(--school-paper);color:var(--school-ink)}
+body.c2-mode header{background:var(--school-navy)}
+body.c2-mode #tab-evaluate{background:var(--school-white);border-color:var(--school-line)}
+body.c2-mode .rubric-row{background:#fbfbfb}
+body.c2-mode .rubric-picks button.selected{background:var(--school-navy);border-color:var(--school-navy);color:#fff}
+body.c2-mode .rubric-detail-option.selected{box-shadow:inset 0 0 0 2px var(--school-navy)}
+body.c2-mode #save-evaluation{background:var(--school-gold);border-color:#aa842d}
+body.c2-mode #save-evaluation:hover{background:var(--school-gold-hover)}
+@media(max-width:700px){main{padding:0 10px}.panel{padding:14px}header{font-size:15px}}
 </style>
 </head>
 <body>
