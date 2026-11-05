@@ -259,6 +259,17 @@ body.c2-mode .work-topbar{display:flex}
 body.c2-mode #project-detail-view>.project-context{display:none}
 @media(max-width:850px){.work-shell,body.c2-mode .work-shell{grid-template-columns:65px minmax(0,1fr)}.side-brand span{display:none}.side-brand{font-size:20px}.side-links button{font-size:0;text-align:center;padding:11px 3px}.side-links button::first-letter{font-size:20px}.side-account{font-size:0}.side-account button{font-size:9px;padding:3px}.work-main,body.c2-mode .work-main{padding:0 12px 30px}.work-topbar{margin:0 -12px 12px;padding:8px 12px}.editor-grid{grid-template-columns:1fr}.criterion-sidebar{border-right:0;border-bottom:1px solid #ddd}.home-grid{grid-template-columns:1fr}}
 @media(max-width:600px){.home-actions{grid-template-columns:1fr}.home-actions button{min-height:55px;flex-direction:row}.target-form-row{flex-direction:column;align-items:stretch}}
+
+.rubric-setup{display:flex;align-items:end;gap:12px;flex-wrap:wrap;background:#f8f8f8;border:1px solid #dadddf;border-radius:6px;padding:12px 15px;margin:12px 0}
+.rubric-setup>div{min-width:220px}.rubric-setup label{margin:0 0 5px}.rubric-setup select{height:37px}
+.rubric-setup p{font-size:12px;color:#67707c;margin:0;flex-basis:100%}
+.descriptor-main{padding:8px 12px;min-width:0}.descriptor-row{align-items:stretch}
+.descriptor-main textarea{width:100%;min-height:76px;margin-top:7px;border:1px solid #d1d7dd;border-radius:4px;padding:8px 10px}
+.descriptor-toggle{display:flex;align-items:center;gap:8px;white-space:nowrap;cursor:pointer;padding:0;background:transparent!important;text-align:left!important;font-weight:500!important}
+.descriptor-toggle input{width:17px;height:17px;accent-color:#172e50}
+.descriptor-disabled{background:#f7f7f7;opacity:.77}
+.descriptor-disabled .descriptor-main textarea{background:#f0f1f2}
+.descriptor-count{margin:10px 0 4px;color:#172e50;font-weight:700;font-size:12px}
 </style>
 </head>
 <body>
@@ -270,7 +281,7 @@ body.c2-mode #project-detail-view>.project-context{display:none}
 <div id="project-create-view" class="panel hidden"><div class="flex between"><h2>新しいプロジェクト</h2><button class="secondary small" type="button" data-back>戻る</button></div><form id="project-form"><label>プロジェクト名</label><input id="project-name" placeholder="例：探究活動 第1学期" maxlength="120" required><div class="grid"><div><label>評価対象</label><select id="project-kind"><option value="individual">個人</option><option value="group">グループ</option></select></div><div><label>評価段階</label><select id="project-scale"><option value="3">3段階</option><option value="4" selected>4段階</option><option value="5">5段階</option></select></div></div><div class="actions"><button type="submit">作成する</button></div></form></div>
 <div id="project-detail-view" class="hidden"><div class="panel project-context"><div class="flex between"><div><button id="back-list" type="button" class="secondary small">← 一覧へ</button><h1 id="detail-title" style="margin:14px 0 3px"></h1><div id="detail-subtitle" class="muted"></div></div><button id="export-csv" class="secondary" type="button">CSV出力</button></div></div><div class="tabs"><button type="button" data-tab="targets" class="active">評価対象</button><button type="button" data-tab="criteria">ルーブリック</button><button type="button" data-tab="evaluate">評価入力</button><button type="button" data-tab="results">評価一覧</button></div>
 <div class="panel" id="tab-targets"><h1>評価対象の登録・管理</h1><div class="subpanel"><h2>新しい評価対象の登録</h2><form id="targets-form"><label for="target-names">対象名（複数登録は1行に1件）</label><div class="target-form-row"><textarea id="target-names" placeholder="例：3班" required></textarea><button class="gold-button" type="submit">＋ 追加</button></div></form></div><div class="flex between list-heading"><h2>登録済みの評価対象 <span id="target-count" class="muted"></span></h2><input id="target-search" type="search" placeholder="名前で検索…" aria-label="評価対象を検索"></div><div class="table-wrap target-table"><table><thead><tr><th>No.</th><th>対象名</th><th>評価記録</th><th>操作</th></tr></thead><tbody id="targets-list"></tbody></table></div></div>
-<div class="panel hidden" id="tab-criteria"><h1>ルーブリックの登録・編集</h1><div class="editor-grid"><div class="criterion-sidebar"><h2>ルーブリック項目 <span id="criterion-count" class="muted"></span></h2><div id="criteria-list"></div><button type="button" class="secondary" id="new-criterion">＋ 項目を追加</button></div><div class="criterion-editor"><h2 id="criterion-editor-title">評価項目の登録</h2><form id="criterion-form"><label for="criterion-title">観点名</label><input id="criterion-title" required placeholder="例：地歴の融合"><label for="criterion-description">説明（任意）</label><input id="criterion-description" placeholder="この観点で何を評価するか"><h3>評価基準（ルーブリック）</h3><div id="criterion-descriptors"></div><div class="actions between"><button type="button" class="secondary" id="cancel-criterion">キャンセル</button><button type="submit" class="gold-button" id="criterion-submit">✓ 保存</button></div></form></div></div></div>
+<div class="panel hidden" id="tab-criteria"><h1>ルーブリックの登録・編集</h1><div class="rubric-setup"><div><label for="rubric-scale">評価入力の選択肢数</label><select id="rubric-scale"><option value="3">3段階</option><option value="4">4段階</option><option value="5">5段階（A+・A・B・C+・C）</option></select></div><button type="button" id="save-rubric-scale" class="secondary">段階数を変更</button><p>評価の選択肢数と、文章で示す基準の数は別々に設定できます。例：評価5段階・基準文3段階。</p></div><div class="editor-grid"><div class="criterion-sidebar"><h2>ルーブリック項目 <span id="criterion-count" class="muted"></span></h2><div id="criteria-list"></div><button type="button" class="secondary" id="new-criterion">＋ 項目を追加</button></div><div class="criterion-editor"><h2 id="criterion-editor-title">評価項目の登録</h2><form id="criterion-form"><label for="criterion-title">観点名</label><input id="criterion-title" required placeholder="例：地歴の融合"><label for="criterion-description">説明（任意）</label><input id="criterion-description" placeholder="この観点で何を評価するか"><h3>評価基準（ルーブリック）</h3><p class="muted">各段階の「基準文を使用」をオン・オフできます。評価の選択ボタンはすべて残ります。</p><div id="criterion-descriptors"></div><div id="descriptor-count" class="descriptor-count"></div><div class="actions between"><button type="button" class="secondary" id="cancel-criterion">キャンセル</button><button type="submit" class="gold-button" id="criterion-submit">✓ 保存</button></div></form></div></div></div>
 <div class="panel hidden" id="tab-evaluate"><div class="c2-toolbar"><label for="evaluate-target">評価対象グループ</label><select id="evaluate-target"></select><span class="c2-evaluator">評価者：<span id="evaluate-teacher-label"></span></span><button type="button" class="secondary small" id="expand-all">すべて展開</button><button type="button" class="secondary small" id="collapse-all">すべて折りたたむ</button></div><div id="evaluation-body"></div><div class="c2-footer"><label for="evaluate-comment">総合コメント（任意）</label><textarea id="evaluate-comment" placeholder="評価の根拠や気づきを入力"></textarea><div id="save-panel" class="save-panel"><div><div id="save-status" class="save-status" role="status" aria-live="polite">未保存</div><p class="save-help">再保存すると前の評価を上書きします。</p></div><button type="button" id="save-evaluation">評価を保存</button></div></div></div>
 <div class="panel hidden" id="tab-results"><h2>評価一覧</h2><p class="muted">評価者ごとの記録を表示します。全件をダウンロードするには「CSV出力」を押してください。</p><div id="results-list"></div></div></div></div></div></section>
 </main>
@@ -304,7 +315,7 @@ async function reloadProject(){const pid=state.project.id;const [targets,criteri
  checked(client.from('assessments').select('id,project_id,target_id,teacher_id,comment,created_at').eq('project_id',pid).order('created_at',{ascending:false}))]);
  state.targets=targets;state.criteria=criteria;state.assessments=assessments;state.scores=[];
  if(assessments.length){const ids=assessments.map(a=>a.id);for(let i=0;i<ids.length;i+=100){const part=await checked(client.from('assessment_scores').select('id,assessment_id,criterion_id,score').in('assessment_id',ids.slice(i,i+100)));state.scores.push(...part);}}
- renderTargets();renderCriteria();renderTargetSelect();renderResults();renderDescriptorInputs();renderHome();}
+ renderTargets();renderCriteria();renderTargetSelect();renderResults();renderDescriptorInputs(state.criteria.find(c=>c.id===state.editCriterionId));$('rubric-scale').value=String(state.project.scale_count);renderHome();}
 function renderTargets(){
  const q=($('target-search')?.value||'').trim().toLowerCase(),el=$('targets-list');
  $('target-count').textContent='（'+state.targets.length+'件）';
@@ -316,8 +327,20 @@ function renderCriteria(){
  $('criterion-count').textContent='（'+state.criteria.length+'件）';
  $('criteria-list').innerHTML=state.criteria.length?state.criteria.map((c,i)=>'<div class="criterion-item'+(state.editCriterionId===c.id?' active':'')+'"><button type="button" data-edit-criterion="'+escapeHtml(c.id)+'">'+(i+1)+'．'+escapeHtml(c.title)+'</button><button type="button" class="mini-remove" data-delete-criterion="'+escapeHtml(c.id)+'" title="項目を削除">×</button></div>').join(''):'<p class="muted">評価項目はまだありません。</p>';
 }
-function renderDescriptorInputs(){const count=Number(state.project?.scale_count||4);$('criterion-descriptors').innerHTML=Array.from({length:count},(_,i)=>{const level=count-i;return '<div class="descriptor-row"><label for="descriptor-'+level+'">'+escapeHtml(scoreLabel(level,count))+'</label><textarea id="descriptor-'+level+'" required placeholder="この段階の評価基準を入力"></textarea></div>';}).join('');}
-function editCriterion(id=null){state.editCriterionId=id;const c=state.criteria.find(x=>x.id===id);$('criterion-editor-title').textContent=c?'評価項目の編集':'新しい評価項目の登録';$('criterion-title').value=c?.title||'';$('criterion-description').value=c?.description||'';const desc=c?descriptorList(c):[];for(let i=0;i<Number(state.project.scale_count);i++)$('descriptor-'+(i+1)).value=desc[i]||'';$('criterion-submit').textContent=c?'✓ 変更を保存':'✓ 追加する';renderCriteria();}
+function defaultDescriptorLevels(count){return count===5?[5,3,1]:Array.from({length:count},(_,i)=>i+1);}
+function renderDescriptorInputs(c=null){
+ const count=Number(state.project?.scale_count||4),values=c?descriptorList(c):[];
+ const enabled=c?Array.from({length:count},(_,i)=>i+1).filter(n=>!!String(values[n-1]??'').trim()):defaultDescriptorLevels(count);
+ $('criterion-descriptors').innerHTML=Array.from({length:count},(_,i)=>{
+  const level=count-i,active=enabled.includes(level);
+  return '<div class="descriptor-row'+(active?'':' descriptor-disabled')+'" data-level="'+level+'"><label for="descriptor-'+level+'">'+escapeHtml(scoreLabel(level,count))+'</label><div class="descriptor-main"><label class="descriptor-toggle"><input type="checkbox" data-descriptor-toggle="'+level+'"'+(active?' checked':'')+'> 基準文を使用</label><textarea id="descriptor-'+level+'" placeholder="この段階の評価基準を入力"'+(active?' required':' disabled')+'>'+escapeHtml(values[level-1]||'')+'</textarea></div></div>';
+ }).join('');updateDescriptorCount();
+}
+function updateDescriptorCount(){
+ const enabled=[...document.querySelectorAll('[data-descriptor-toggle]')].filter(e=>e.checked).length;
+ $('descriptor-count').textContent='評価の選択肢：'+Number(state.project.scale_count)+'段階 ／ 基準文を設定：'+enabled+'段階';
+}
+function editCriterion(id=null){state.editCriterionId=id;const c=state.criteria.find(x=>x.id===id);$('criterion-editor-title').textContent=c?'評価項目の編集':'新しい評価項目の登録';$('criterion-title').value=c?.title||'';$('criterion-description').value=c?.description||'';renderDescriptorInputs(c);$('criterion-submit').textContent=c?'✓ 変更を保存':'✓ 追加する';renderCriteria();}
 function renderHome(){
  if(!state.project)return;const targetCount=state.targets.length,completed=new Set(state.assessments.map(a=>a.target_id)).size,percent=targetCount?Math.round(completed/targetCount*100):0;
  $('home-progress').textContent='評価済み '+completed+' / '+targetCount+' （'+percent+'%）';$('home-progress-bar').style.width=percent+'%';
@@ -327,7 +350,7 @@ function renderHome(){
 function renderTargetSelect(){const el=$('evaluate-target');const prior=state.selectedTarget;el.innerHTML=state.targets.map(t=>`<option value="${escapeHtml(t.id)}">${escapeHtml(t.name)}</option>`).join('');state.selectedTarget=state.targets.some(t=>t.id===prior)?prior:(state.targets[0]?.id||null);if(state.selectedTarget)el.value=state.selectedTarget;renderEvaluation();}
 function updateSaveStatus(type,text){const panel=$('save-panel'),label=$('save-status');panel.className='save-panel '+type;label.className='save-status '+type;label.textContent=text;const btn=$('save-evaluation');btn.textContent=type==='saving'?'保存中…':state.selectedAssessment?'変更を保存（上書き）':'評価を保存';}
 function markDirty(){if(state.saving)return;state.dirty=true;updateSaveStatus('dirty','● 未保存の変更があります');}
-function scoreLabel(score,count){const levels=count===3?['C','B','A+']:count===4?['C','B','A','A+']:count===5?['D','C','B','A','A+']:null;return levels?levels[score-1]:String(score);}
+function scoreLabel(score,count){const levels=count===3?['C','B','A+']:count===4?['C','B','A','A+']:count===5?['C','C+','B','A','A+']:null;return levels?levels[score-1]:String(score);}
 function refreshRubric(){
  const root=$('evaluation-body');
  root.querySelectorAll('[data-criterion][data-score]').forEach(b=>{const selected=state.selectedScores[b.dataset.criterion]===Number(b.dataset.score);b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',String(selected));});
@@ -347,7 +370,7 @@ function renderEvaluation(){
  body.innerHTML='<div class="rubric-list">'+state.criteria.map((c,i)=>{
   const open=state.expandedCriteria.has(c.id)||(i===0&&state.expandedCriteria.size===0);if(open)state.expandedCriteria.add(c.id);
   const arr=descriptorList(c),id=escapeHtml(c.id);
-  return '<div class="rubric-item"><div class="rubric-row"><button type="button" class="rubric-toggle" data-toggle="'+id+'" aria-expanded="'+open+'"><span class="rubric-arrow">'+(open?'⌄':'›')+'</span><span><strong>'+(i+1)+'．'+escapeHtml(c.title)+'</strong></span></button><div class="rubric-picks">'+scoreOptions.map(n=>'<button type="button" data-criterion="'+id+'" data-score="'+n+'" aria-pressed="false">'+escapeHtml(scoreLabel(n,count))+'</button>').join('')+'</div></div><div class="rubric-detail'+(open?'':' hidden')+'" data-detail="'+id+'"><div class="rubric-detail-grid" style="--count:'+count+'">'+scoreOptions.map(n=>'<button type="button" class="rubric-detail-option" data-criterion="'+id+'" data-score="'+n+'" aria-pressed="false"><span class="rubric-level">'+escapeHtml(scoreLabel(n,count))+(count===3?(n===3?'（理想レベル）':n===2?'（標準レベル）':'（改善レベル）'):'')+'</span><span>'+escapeHtml(arr[n-1]||'基準の記載なし')+'</span></button>').join('')+'</div></div></div>';
+  return '<div class="rubric-item"><div class="rubric-row"><button type="button" class="rubric-toggle" data-toggle="'+id+'" aria-expanded="'+open+'"><span class="rubric-arrow">'+(open?'⌄':'›')+'</span><span><strong>'+(i+1)+'．'+escapeHtml(c.title)+'</strong></span></button><div class="rubric-picks">'+scoreOptions.map(n=>'<button type="button" data-criterion="'+id+'" data-score="'+n+'" aria-pressed="false">'+escapeHtml(scoreLabel(n,count))+'</button>').join('')+'</div></div><div class="rubric-detail'+(open?'':' hidden')+'" data-detail="'+id+'"><div class="rubric-detail-grid" style="--count:'+Math.max(1,scoreOptions.filter(n=>String(arr[n-1]||'').trim()).length)+'">'+scoreOptions.filter(n=>String(arr[n-1]||'').trim()).map(n=>'<button type="button" class="rubric-detail-option" data-criterion="'+id+'" data-score="'+n+'" aria-pressed="false"><span class="rubric-level">'+escapeHtml(scoreLabel(n,count))+(count===3?(n===3?'（理想レベル）':n===2?'（標準レベル）':'（改善レベル）'):'')+'</span><span>'+escapeHtml(arr[n-1])+'</span></button>').join('')+(scoreOptions.some(n=>String(arr[n-1]||'').trim())?'':'<div class="muted" style="padding:12px">説明文は未登録です。上のボタンから評価できます。</div>')+'</div></div></div>';
  }).join('')+'</div>';refreshRubric();
 }
 
@@ -394,7 +417,41 @@ $('back-list').addEventListener('click',async()=>{try{await loadProjects();showO
 $('project-list').addEventListener('click',e=>{const btn=e.target.closest('[data-project]');if(btn)openProject(btn.dataset.project);});
 $('project-form').addEventListener('submit',async e=>{e.preventDefault();const btn=e.target.querySelector('[type=submit]');btn.disabled=true;try{const p={name:$('project-name').value.trim(),target_kind:$('project-kind').value,scale_count:Number($('project-scale').value),created_by:state.user.id};if(!p.name)throw Error('名前を入力してください');const created=await checked(client.from('projects').insert(p).select('id').single());await loadProjects();e.target.reset();await openProject(created.id);notify('プロジェクトを作成しました。');}catch(err){fail(err,'プロジェクト作成');}finally{btn.disabled=false;}});
 $('targets-form').addEventListener('submit',async e=>{e.preventDefault();const lines=$('target-names').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);const names=[...new Set(lines)].filter(x=>!state.targets.some(t=>t.name===x));if(!names.length){notify('追加する新しい名前がありません。',true);return;}const btn=e.target.querySelector('button');btn.disabled=true;try{for(let i=0;i<names.length;i+=100)await checked(client.from('targets').insert(names.slice(i,i+100).map(name=>({project_id:state.project.id,name}))));$('target-names').value='';await reloadProject();notify(names.length+'件を追加しました。');}catch(err){fail(err,'評価対象の登録');}finally{btn.disabled=false;}});
-$('criterion-form').addEventListener('submit',async e=>{e.preventDefault();const btn=$('criterion-submit');btn.disabled=true;try{const descriptors=Array.from({length:Number(state.project.scale_count)},(_,i)=>$('descriptor-'+(i+1)).value.trim());if(descriptors.some(x=>!x))throw Error('各段階の基準を入力してください');const p={title:$('criterion-title').value.trim(),description:$('criterion-description').value.trim(),descriptors};if(state.editCriterionId){await checked(client.from('criteria').update(p).eq('id',state.editCriterionId).select('id').single());}else{await checked(client.from('criteria').insert({...p,project_id:state.project.id,sort_order:state.criteria.length+1}).select('id').single());}const wasEdit=!!state.editCriterionId;state.editCriterionId=null;await reloadProject();editCriterion();notify(wasEdit?'評価項目を更新しました。':'評価項目を追加しました。');}catch(err){fail(err,'評価項目の保存');}finally{btn.disabled=false;}});
+$('criterion-form').addEventListener('submit',async e=>{e.preventDefault();const btn=$('criterion-submit');btn.disabled=true;try{
+ const count=Number(state.project.scale_count);
+ const descriptors=Array.from({length:count},(_,i)=>document.querySelector('[data-descriptor-toggle="'+(i+1)+'"]')?.checked?$('descriptor-'+(i+1)).value.trim():'');
+ if(descriptors.every(v=>!v))throw Error('少なくとも1つの基準文を入力してください。');
+ if([...document.querySelectorAll('[data-descriptor-toggle]')].some(e=>e.checked&&!$('descriptor-'+e.dataset.descriptorToggle).value.trim()))throw Error('使用する評価基準の説明文が空欄です。');
+ const p={title:$('criterion-title').value.trim(),description:$('criterion-description').value.trim(),descriptors};
+ if(!p.title)throw Error('評価項目名を入力してください。');
+ if(state.editCriterionId){await checked(client.from('criteria').update(p).eq('id',state.editCriterionId).select('id').single());}
+ else{await checked(client.from('criteria').insert({...p,project_id:state.project.id,sort_order:state.criteria.length+1}).select('id').single());}
+ const wasEdit=!!state.editCriterionId;state.editCriterionId=null;await reloadProject();editCriterion();notify(wasEdit?'評価項目を更新しました。':'評価項目を追加しました。');
+ }catch(err){fail(err,'評価項目の保存');}finally{btn.disabled=false;}});
+$('criterion-descriptors').addEventListener('change',e=>{
+ const toggle=e.target.closest('[data-descriptor-toggle]');if(!toggle)return;
+ const area=$('descriptor-'+toggle.dataset.descriptorToggle);area.disabled=!toggle.checked;area.required=toggle.checked;
+ toggle.closest('.descriptor-row').classList.toggle('descriptor-disabled',!toggle.checked);
+ updateDescriptorCount();
+});
+$('save-rubric-scale').addEventListener('click',async()=>{
+ const next=Number($('rubric-scale').value),previous=Number(state.project.scale_count);
+ if(next===previous){notify('段階数は変更されていません。');return;}
+ if(state.profile.role!=='admin'){notify('段階数の変更は管理者のみ可能です。',true);$('rubric-scale').value=String(previous);return;}
+ if(next<previous&&state.scores.some(s=>Number(s.score)>next)){
+  notify('新しい段階数を超える保存済みの評価があります。評価結果を保護するため段階数は変更できません。',true);$('rubric-scale').value=String(previous);return;
+ }
+ if(!confirm('評価段階数を'+previous+'から'+next+'に変更しますか？既存の評価ラベルの意味が変わる場合があります。')){$('rubric-scale').value=String(previous);return;}
+ const btn=$('save-rubric-scale');btn.disabled=true;
+ try{
+  await checked(client.from('projects').update({scale_count:next}).eq('id',state.project.id).select('id').single());
+  state.project.scale_count=next;const p=state.projects.find(x=>x.id===state.project.id);if(p)p.scale_count=next;
+  $('detail-subtitle').textContent=(state.project.target_kind==='group'?'グループ':'個人')+'評価・'+next+'段階';
+  state.editCriterionId=null;await reloadProject();editCriterion();renderProjects();
+  notify('評価段階数を'+next+'に変更しました。基準文を使用する段階は各評価項目で設定してください。');
+ }catch(err){$('rubric-scale').value=String(previous);fail(err,'評価段階数の変更');}finally{btn.disabled=false;}
+});
+
 for(const b of document.querySelectorAll('[data-tab]'))b.addEventListener('click',()=>{notify('');setTab(b.dataset.tab);});
 document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.nav)));
 document.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.jump)));
