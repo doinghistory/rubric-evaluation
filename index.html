@@ -373,8 +373,8 @@ body.read-only-project #tab-criteria [data-edit-criterion]{cursor:default}
 <header>ルーブリック評価</header>
 <main>
 <section class="panel login" id="login-view"><h1>ログイン</h1><form id="login-form"><label for="employee">職員番号</label><input id="employee" type="text" inputmode="numeric" autocomplete="username" maxlength="6" pattern="[0-9]{6}" placeholder="6桁の職員番号" required><label for="password">パスワード</label><input id="password" type="password" autocomplete="current-password" required><div class="actions"><button id="login-button" type="submit">ログイン</button></div></form><div id="login-message" class="notice hidden" role="status" aria-live="polite"></div></section>
-<section id="app-view" class="hidden"><div class="work-shell"><aside class="side-nav"><div class="side-brand">▤ <span>ルーブリック評価</span></div><nav class="side-links" aria-label="メニュー"><button type="button" data-nav="home">⌂　ホーム</button><button type="button" data-nav="targets">♙　評価対象の登録</button><button type="button" data-nav="criteria">▦　ルーブリック登録</button><button type="button" data-nav="assignments" id="assignment-nav" class="hidden">☷　評価担当の設定</button><button type="button" data-nav="participants" id="participants-nav" class="hidden">♧　参加教員の設定</button><button type="button" data-nav="evaluate">✎　評価入力</button><button type="button" data-nav="results">☷　評価一覧</button><button type="button" data-nav="export">⇩　集計・CSV</button><button type="button" data-nav="settings">⚙　プロジェクト</button><button type="button" data-nav="staff" id="staff-nav" class="hidden">♙　教員管理</button></nav><div class="side-account"><div id="account"></div><button id="logout" type="button">ログアウト</button></div></aside><div class="work-main"><div class="work-topbar"><strong id="top-project-name">評価プロジェクト</strong><select id="top-project-select" aria-label="プロジェクトを選択"><option value="">プロジェクトを選択</option></select></div><div id="app-notice" class="notice hidden" role="status" aria-live="polite"></div>
-<div id="home-view" class="panel hidden"><h1>ホーム</h1><div class="home-box my-projects"><div class="flex between"><h2>マイプロジェクト</h2><button type="button" class="secondary small" data-jump="settings">一覧・新規作成</button></div><div id="home-project-list"></div></div><div class="home-actions"><button type="button" data-jump="evaluate">✎<strong>評価入力へ</strong></button><button type="button" data-jump="results">☷<strong>評価一覧</strong></button><button type="button" data-jump="export">⇩<strong>集計・CSV出力</strong></button></div><div class="home-grid"><div class="home-box"><h2>評価の進捗</h2><div id="home-progress"></div><div class="progress-track"><span id="home-progress-bar"></span></div></div><div class="home-box"><h2>最近の評価</h2><div id="home-recent"></div></div></div><div class="home-box"><h2>基本情報</h2><div class="home-stats" id="home-stats"></div></div></div><div id="staff-view" class="panel hidden">
+<section id="app-view" class="hidden"><div class="work-shell"><aside class="side-nav"><div class="side-brand">▤ <span>ルーブリック評価</span></div><nav class="side-links" aria-label="メニュー"><button type="button" data-nav="home">⌂　ホーム</button><button type="button" data-nav="targets">♙　評価対象の登録</button><button type="button" data-nav="criteria">▦　ルーブリック登録</button><button type="button" data-nav="assignments" id="assignment-nav" class="hidden">☷　評価担当の設定</button><button type="button" data-nav="participants" id="participants-nav" class="hidden">♧　参加教員の設定</button><button type="button" data-nav="evaluate">✎　評価入力</button><button type="button" data-nav="results">☷　評価一覧</button><button type="button" data-nav="export">⇩　集計・CSV</button><button type="button" data-nav="settings">⚙　アサインメント</button><button type="button" data-nav="staff" id="staff-nav" class="hidden">♙　教員管理</button></nav><div class="side-account"><div id="account"></div><button id="logout" type="button">ログアウト</button></div></aside><div class="work-main"><div class="work-topbar"><strong id="top-project-name">評価アサインメント</strong><select id="top-project-select" aria-label="アサインメントを選択"><option value="">アサインメントを選択</option></select></div><div id="app-notice" class="notice hidden" role="status" aria-live="polite"></div>
+<div id="home-view" class="panel hidden"><h1>ホーム</h1><div class="home-box my-projects"><div class="flex between"><h2>マイアサインメント</h2><button type="button" class="secondary small" data-jump="settings">一覧・新規作成</button></div><div id="home-project-list"></div></div><div class="home-actions"><button type="button" data-jump="evaluate">✎<strong>評価入力へ</strong></button><button type="button" data-jump="results">☷<strong>評価一覧</strong></button><button type="button" data-jump="export">⇩<strong>集計・CSV出力</strong></button></div><div class="home-grid"><div class="home-box"><h2>評価の進捗</h2><div id="home-progress"></div><div class="progress-track"><span id="home-progress-bar"></span></div></div><div class="home-box"><h2>最近の評価</h2><div id="home-recent"></div></div></div><div class="home-box"><h2>基本情報</h2><div class="home-stats" id="home-stats"></div></div></div><div id="staff-view" class="panel hidden">
 <h1>教員アカウント管理</h1><p class="muted">管理者専用。職員番号でログインする教員を追加・利用停止できます。</p>
 <div id="staff-service-message" class="notice">「更新」でSupabaseとの接続を確認できます。</div>
 <div class="editor-grid staff-editor-grid">
@@ -387,11 +387,11 @@ body.read-only-project #tab-criteria [data-edit-criterion]{cursor:default}
 <p class="muted">パスワードは管理者が安全な方法で本人に伝えてください。初期パスワードは画面上に保存しません。</p>
 <div class="actions"><button id="staff-create-button" type="submit" class="gold-button">教員を登録</button></div></form></div>
 </div></div>
-<div id="project-list-view" class="panel"><div class="flex between"><h2>マイプロジェクト</h2><button id="new-project" type="button">新規作成</button></div><div id="project-list" class="muted">読み込み中…</div></div>
-<div id="project-create-view" class="panel hidden"><div class="flex between"><h2>新しいプロジェクト</h2><button class="secondary small" type="button" data-back>戻る</button></div><form id="project-form"><label>プロジェクト名</label><input id="project-name" placeholder="例：探究活動 第1学期" maxlength="120" required><div class="grid"><div><label>評価対象</label><select id="project-kind"><option value="individual">個人</option><option value="group">グループ</option></select></div><div><label>評価段階</label><select id="project-scale"><option value="3">3段階</option><option value="4" selected>4段階</option><option value="5">5段階</option></select></div></div><div class="actions"><button type="submit">作成する</button></div></form></div>
+<div id="project-list-view" class="panel"><div class="flex between"><h2>マイアサインメント</h2><button id="new-project" type="button">新規作成</button></div><div id="project-list" class="muted">読み込み中…</div></div>
+<div id="project-create-view" class="panel hidden"><div class="flex between"><h2>新しいアサインメント</h2><button class="secondary small" type="button" data-back>戻る</button></div><form id="project-form"><label>アサインメント名</label><input id="project-name" placeholder="例：探究活動 第1学期" maxlength="120" required><div class="grid"><div><label>評価対象</label><select id="project-kind"><option value="individual">個人</option><option value="group">グループ</option></select></div><div><label>評価段階</label><select id="project-scale"><option value="3">3段階</option><option value="4" selected>4段階</option><option value="5">5段階</option></select></div></div><div class="actions"><button type="submit">作成する</button></div></form></div>
 <div id="project-detail-view" class="hidden"><div class="panel project-context"><div class="flex between"><div><button id="back-list" type="button" class="secondary small">← 一覧へ</button><h1 id="detail-title" style="margin:14px 0 3px"></h1><div id="detail-subtitle" class="muted"></div></div><button id="export-csv" class="secondary" type="button">CSV出力</button></div></div><div class="tabs"><button type="button" data-tab="targets" class="active">評価対象</button><button type="button" data-tab="criteria">ルーブリック</button><button type="button" data-tab="assignments" id="assignment-tab-button">評価担当の設定</button><button type="button" data-tab="participants" id="participants-tab-button">参加教員の設定</button><button type="button" data-tab="evaluate">評価入力</button><button type="button" data-tab="results">評価一覧</button></div>
 <div class="panel" id="tab-targets"><h1>評価対象の登録・管理</h1><div class="subpanel"><h2>新しい評価対象の登録</h2><form id="targets-form"><label for="target-names">対象名（複数登録は1行に1件）</label><div class="target-form-row"><textarea id="target-names" placeholder="例：3班" required></textarea><button class="gold-button" type="submit">＋ 追加</button></div></form></div><div class="csv-import-box"><h2>CSVから一括登録</h2><p class="muted">「対象名」列のあるCSVを取り込みます。同名の評価対象は重複登録しません。</p><div class="csv-import-row"><input id="targets-csv-file" type="file" accept=".csv,text/csv"><button type="button" class="secondary small" id="targets-csv-template">見本CSVを保存</button><button type="button" class="gold-button" id="targets-csv-preview">内容を確認</button></div><div id="targets-csv-review" class="csv-review hidden" aria-live="polite"></div></div><div class="flex between list-heading"><h2>登録済みの評価対象 <span id="target-count" class="muted"></span></h2><input id="target-search" type="search" placeholder="名前で検索…" aria-label="評価対象を検索"></div><div class="table-wrap target-table"><table><thead><tr><th>No.</th><th>対象名</th><th>評価記録</th><th>操作</th></tr></thead><tbody id="targets-list"></tbody></table></div></div>
-<div class="panel hidden" id="tab-participants"><h1>参加教員の設定</h1><p class="muted">作成者が参加教員を追加できます。評価者は評価入力・閲覧、共同編集者はルーブリック・評価対象の編集もできます。</p><div id="participants-status" class="assignment-notice hidden"></div><div class="assignment-layout"><div class="assignment-people"><h2>参加中の教員</h2><div id="participants-list"></div></div><div class="assignment-editor"><h2>教員を追加</h2><form id="participants-add-form"><label for="participants-employee">職員番号（6桁）</label><input id="participants-employee" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="例：123456" required><label for="participants-role">権限</label><select id="participants-role"><option value="evaluator">評価者</option><option value="editor">共同編集者</option></select><p class="muted">登録済みの教員を追加します。追加された教員は自分のプロジェクト一覧から開けます。</p><button class="gold-button" type="submit" id="participants-add">参加教員を追加</button></form></div></div></div><div class="panel hidden" id="tab-assignments">
+<div class="panel hidden" id="tab-participants"><h1>参加教員の設定</h1><p class="muted">作成者が参加教員を追加できます。評価者は評価入力・閲覧、共同編集者はルーブリック・評価対象の編集もできます。</p><div id="participants-status" class="assignment-notice hidden"></div><div class="assignment-layout"><div class="assignment-people"><h2>参加中の教員</h2><div id="participants-list"></div></div><div class="assignment-editor"><h2>教員を追加</h2><form id="participants-add-form"><label for="participants-employee">教員名</label><select id="participants-employee" required><option value="">教員を選択してください</option></select><label for="participants-role">権限</label><select id="participants-role"><option value="evaluator">評価者</option><option value="editor">共同編集者</option></select><p class="muted">登録済みの教員を追加します。追加された教員は自分のアサインメント一覧から開けます。</p><button class="gold-button" type="submit" id="participants-add">参加教員を追加</button></form></div></div></div><div class="panel hidden" id="tab-assignments">
 <h1>評価担当の設定</h1><p class="muted">教員ごとに評価するルーブリック項目を選択できます。初期状態は全項目担当です。</p>
 <div id="assignment-notice" class="assignment-notice hidden" role="status"></div>
 <div class="assignment-layout">
@@ -417,7 +417,7 @@ const PROJECT_URL='https://cdoydtconrygubkyeyym.supabase.co';
 const PUBLISHABLE_KEY='sb_publishable_KApWphyPCNW8M9U95_kPCg_Oxuy3KA4';
 const client=window.supabase.createClient(PROJECT_URL,PUBLISHABLE_KEY);
 const $=id=>document.getElementById(id);
-const state={user:null,profile:null,projects:[],project:null,targets:[],criteria:[],assessments:[],scores:[],memberships:[],membershipReady:false,members:[],assignments:[],assignmentReady:false,assignmentError:null,assignmentTeachers:[],assignmentTeacherId:null,assignmentDraft:new Set(),teacherNames:{},resultsTargetId:null,resultsSearch:'',resultsStatus:'all',selectedTarget:null,selectedScores:{},selectedAssessment:null,tab:'targets'};
+const state={user:null,profile:null,projects:[],project:null,targets:[],criteria:[],assessments:[],scores:[],memberships:[],membershipReady:false,members:[],availableTeachers:[],assignments:[],assignmentReady:false,assignmentError:null,assignmentTeachers:[],assignmentTeacherId:null,assignmentDraft:new Set(),teacherNames:{},resultsTargetId:null,resultsSearch:'',resultsStatus:'all',selectedTarget:null,selectedScores:{},selectedAssessment:null,tab:'targets'};
 const escapeHtml=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function notify(s,error=false,login=false){const el=$(login?'login-message':'app-notice');el.textContent=s;el.classList.toggle('hidden',!s);el.classList.toggle('error',error);if(error)console.warn(s);}
 function fail(e,context='操作'){console.error(e);notify(context+'に失敗しました。'+(e?.message?' '+e.message:''),true);}
@@ -433,20 +433,20 @@ async function showHome(user){
 async function loadProjects(){
  state.projects=await checked(client.from('projects').select('id,name,target_kind,scale_count,created_by,created_at').order('created_at',{ascending:false}).limit(200));
  try{state.memberships=await checked(client.from('project_members').select('project_id,user_id,role').eq('user_id',state.user.id));state.membershipReady=true;}
- catch(error){state.memberships=[];state.membershipReady=false;console.warn('参加権限の読み込み',error);notify('プロジェクト共有のSupabase SQLが未実行の可能性があります。SQLを設定してください。',true);}
-renderProjects();$('top-project-select').innerHTML='<option value="">プロジェクトを選択</option>'+state.projects.map(p=>'<option value="'+escapeHtml(p.id)+'">'+escapeHtml(p.name)+'</option>').join('');if(state.project)$('top-project-select').value=state.project.id;}
+ catch(error){state.memberships=[];state.membershipReady=false;console.warn('参加権限の読み込み',error);notify('アサインメント共有のSupabase SQLが未実行の可能性があります。SQLを設定してください。',true);}
+renderProjects();$('top-project-select').innerHTML='<option value="">アサインメントを選択</option>'+state.projects.map(p=>'<option value="'+escapeHtml(p.id)+'">'+escapeHtml(p.name)+'</option>').join('');if(state.project)$('top-project-select').value=state.project.id;}
 function isProjectOwner(project=state.project){return Boolean(project&&state.user&&project.created_by===state.user.id);}
 function membershipRole(project=state.project){if(!project||!state.user)return null;if(isProjectOwner(project))return 'owner';return state.memberships.find(m=>m.project_id===project.id&&m.user_id===state.user.id)?.role||null;}
 function canManageProject(project=state.project){return ['owner','editor'].includes(membershipRole(project));}
 function roleName(role){return role==='owner'?'作成者':role==='editor'?'共同編集者':role==='evaluator'?'評価者':'参加なし';}
 function renderProjects(){
  const el=$('project-list');
- if(!state.projects.length){el.innerHTML='<p class="muted">プロジェクトはまだありません。「新規作成」から作成してください。</p>';return;}
+ if(!state.projects.length){el.innerHTML='<p class="muted">アサインメントはまだありません。「新規作成」から作成してください。</p>';return;}
  const own=state.projects.filter(isProjectOwner),shared=state.projects.filter(p=>!isProjectOwner(p));
  const card=p=>'<div class="item flex between"><div><strong>'+escapeHtml(p.name)+'</strong><div class="meta">'+(p.target_kind==='group'?'グループ':'個人')+'・'+Number(p.scale_count)+'段階　｜　'+roleName(membershipRole(p))+'</div></div><div class="project-actions"><button type="button" class="secondary small" data-project="'+escapeHtml(p.id)+'">開く</button>'+(isProjectOwner(p)?'<button type="button" class="secondary small project-delete-button" data-delete-project="'+escapeHtml(p.id)+'">削除</button>':'')+'</div></div>';
- el.innerHTML='<h3 class="project-section-title">自分が作成したプロジェクト（'+own.length+'）</h3>'+(own.map(card).join('')||'<p class="muted">まだありません。</p>')+'<h3 class="project-section-title">参加しているプロジェクト（'+shared.length+'）</h3>'+(shared.map(card).join('')||'<p class="muted">まだありません。</p>');
+ el.innerHTML='<h3 class="project-section-title">自分が作成したアサインメント（'+own.length+'）</h3>'+(own.map(card).join('')||'<p class="muted">まだありません。</p>')+'<h3 class="project-section-title">参加しているアサインメント（'+shared.length+'）</h3>'+(shared.map(card).join('')||'<p class="muted">まだありません。</p>');
 }
-async function openProject(id,tab='targets'){try{notify('');state.project=state.projects.find(p=>p.id===id);if(!state.project)throw Error('プロジェクトが見つかりません');$('detail-title').textContent=state.project.name;$('detail-subtitle').textContent=(state.project.target_kind==='group'?'グループ':'個人')+'評価・'+state.project.scale_count+'段階';$('top-project-name').textContent=state.project.name;$('top-project-select').value=id;state.expandedCriteria=new Set();state.hasOpenedRubricOnce=false;state.assignmentTeacherId=null;state.assignmentDraft=new Set();state.members=[];showOnly('project-detail-view');await reloadProject();renderHome();if(tab==='home'){showOnly('home-view');syncNav('home');}else{setTab(tab);}}catch(e){fail(e,'プロジェクトの読み込み');}}
+async function openProject(id,tab='targets'){try{notify('');state.project=state.projects.find(p=>p.id===id);if(!state.project)throw Error('アサインメントが見つかりません');$('detail-title').textContent=state.project.name;$('detail-subtitle').textContent=(state.project.target_kind==='group'?'グループ':'個人')+'評価・'+state.project.scale_count+'段階';$('top-project-name').textContent=state.project.name;$('top-project-select').value=id;state.expandedCriteria=new Set();state.hasOpenedRubricOnce=false;state.assignmentTeacherId=null;state.assignmentDraft=new Set();state.members=[];showOnly('project-detail-view');await reloadProject();renderHome();if(tab==='home'){showOnly('home-view');syncNav('home');}else{setTab(tab);}}catch(e){fail(e,'アサインメントの読み込み');}}
 async function reloadProject(){const pid=state.project.id;const [targets,criteria,assessments]=await Promise.all([
  checked(client.from('targets').select('id,project_id,name,created_at').eq('project_id',pid).order('created_at')),
  checked(client.from('criteria').select('id,project_id,title,description,descriptors,sort_order').eq('project_id',pid).order('sort_order')),
@@ -493,7 +493,7 @@ function updateDescriptorCount(){
 }
 function editCriterion(id=null){state.editCriterionId=id;const c=state.criteria.find(x=>x.id===id);$('criterion-editor-title').textContent=c?'評価項目の編集':'新しい評価項目の登録';$('criterion-title').value=c?.title||'';$('criterion-description').value=c?.description||'';renderDescriptorInputs(c);$('criterion-submit').textContent=c?'✓ 変更を保存':'✓ 追加する';renderCriteria();}
 function renderHome(){
- const homeProjects=$('home-project-list');if(homeProjects)homeProjects.innerHTML=state.projects.length?state.projects.map(p=>'<button type="button" class="home-project-link" data-home-project="'+escapeHtml(p.id)+'"><strong>'+escapeHtml(p.name)+'</strong><small>'+roleName(membershipRole(p))+'</small></button>').join(''):'<p class="muted">まずはプロジェクトを作成してください。</p>';
+ const homeProjects=$('home-project-list');if(homeProjects)homeProjects.innerHTML=state.projects.length?state.projects.map(p=>'<button type="button" class="home-project-link" data-home-project="'+escapeHtml(p.id)+'"><strong>'+escapeHtml(p.name)+'</strong><small>'+roleName(membershipRole(p))+'</small></button>').join(''):'<p class="muted">まずはアサインメントを作成してください。</p>';
  if(!state.project)return;const targetCount=state.targets.length,completed=new Set(state.assessments.map(a=>a.target_id)).size,percent=targetCount?Math.round(completed/targetCount*100):0;
  $('home-progress').textContent='評価済み '+completed+' / '+targetCount+' （'+percent+'%）';$('home-progress-bar').style.width=percent+'%';
  const names=new Map(state.targets.map(t=>[t.id,t.name]));$('home-recent').innerHTML=state.assessments.slice(0,4).map(a=>'<div class="item"><strong>'+escapeHtml(names.get(a.target_id)||'対象')+'</strong><span class="meta">　'+escapeHtml(new Date(a.created_at).toLocaleString('ja-JP'))+'</span></div>').join('')||'<p class="muted">まだ評価はありません。</p>';
@@ -530,7 +530,7 @@ function renderEvaluation(){
 
 function syncNav(tab){document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===tab));}
 function setTab(tab){if((tab==='assignments'&&!canManageProject())||(tab==='participants'&&!isProjectOwner()))return false;if(state.tab==='evaluate'&&tab!=='evaluate'&&state.dirty&&!confirm('未保存の変更があります。保存せずに移動しますか？'))return false;state.tab=tab;showOnly('project-detail-view');document.body.classList.toggle('c2-mode',tab==='evaluate');for(const b of document.querySelectorAll('[data-tab]'))b.classList.toggle('active',b.dataset.tab===tab);for(const id of ['targets','criteria','assignments','participants','evaluate','results'])$('tab-'+id).classList.toggle('hidden',id!==tab);if(tab==='results')renderResults();if(tab==='assignments')void loadAssignmentTeachers();if(tab==='participants')void loadParticipants();syncNav(tab);return true;}
-function navigate(tab){if(state.dirty&&state.tab==='evaluate'&&tab!=='evaluate'&&!confirm('未保存の変更があります。移動すると変更内容は失われます。'))return;if(tab==='export'){if(state.project)exportCsv();return;}if(tab==='settings'){document.body.classList.remove('c2-mode');showOnly('project-list-view');syncNav('settings');return;}if(tab==='staff'){if(state.profile?.role!=='admin')return;document.body.classList.remove('c2-mode');showOnly('staff-view');syncNav('staff');void loadStaff();return;}if((tab==='assignments'&&!canManageProject())||(tab==='participants'&&!isProjectOwner())){notify('このプロジェクトの管理権限が必要です。',true);return;}if(tab==='home'){document.body.classList.remove('c2-mode');showOnly('home-view');renderHome();syncNav('home');return;}if(!state.project){showOnly('project-list-view');syncNav('settings');return;}setTab(tab);}
+function navigate(tab){if(state.dirty&&state.tab==='evaluate'&&tab!=='evaluate'&&!confirm('未保存の変更があります。移動すると変更内容は失われます。'))return;if(tab==='export'){if(state.project)exportCsv();return;}if(tab==='settings'){document.body.classList.remove('c2-mode');showOnly('project-list-view');syncNav('settings');return;}if(tab==='staff'){if(state.profile?.role!=='admin')return;document.body.classList.remove('c2-mode');showOnly('staff-view');syncNav('staff');void loadStaff();return;}if((tab==='assignments'&&!canManageProject())||(tab==='participants'&&!isProjectOwner())){notify('このアサインメントの管理権限が必要です。',true);return;}if(tab==='home'){document.body.classList.remove('c2-mode');showOnly('home-view');renderHome();syncNav('home');return;}if(!state.project){showOnly('project-list-view');syncNav('settings');return;}setTab(tab);}
 function resultsData(){
  const scoreByAssessment=new Map();
  for(const s of state.scores){
@@ -595,7 +595,7 @@ async function saveEvaluation(){
  const btn=$('save-evaluation');state.saving=true;btn.disabled=true;$('evaluate-target').disabled=true;updateSaveStatus('saving','保存中…');
  try{
   const comment=$('evaluate-comment').value.trim();
-  // 同一プロジェクト・評価対象・教員の既存記録を更新する。
+  // 同一アサインメント・評価対象・教員の既存記録を更新する。
   const current=await checked(client.from('assessments').select('id,project_id,target_id,teacher_id,comment,created_at').eq('project_id',projectId).eq('target_id',targetId).eq('teacher_id',teacherId).order('created_at',{ascending:false}).limit(1));let a=current[0]||null;
   if(a){await checked(client.from('assessments').update({comment}).eq('id',a.id).eq('teacher_id',teacherId).select('id').single());}
   else{a=await checked(client.from('assessments').insert({project_id:projectId,target_id:targetId,teacher_id:teacherId,comment}).select('id').single());}
@@ -613,7 +613,7 @@ async function saveEvaluation(){
  finally{state.saving=false;btn.disabled=false;$('evaluate-target').disabled=false;}
 }
 function csvCell(x){const s=String(x??'');return '"'+s.replace(/"/g,'""')+'"';}
-function exportCsv(){if(!state.project)return;const names=new Map(state.targets.map(t=>[t.id,t.name]));const headers=['プロジェクト','評価対象','評価者名','評価者ID','評価日時',...state.criteria.map(c=>c.title),'コメント'];const lines=[headers];
+function exportCsv(){if(!state.project)return;const names=new Map(state.targets.map(t=>[t.id,t.name]));const headers=['アサインメント','評価対象','評価者名','評価者ID','評価日時',...state.criteria.map(c=>c.title),'コメント'];const lines=[headers];
  for(const a of state.assessments){const scoreMap=new Map(state.scores.filter(s=>s.assessment_id===a.id&&isCriterionAssigned(a.teacher_id,s.criterion_id)).map(s=>[s.criterion_id,s.score]));lines.push([state.project.name,names.get(a.target_id)||'',teacherDisplayName(a.teacher_id),a.teacher_id,a.created_at?new Date(a.created_at).toLocaleString('ja-JP'):'',...state.criteria.map(c=>scoreMap.get(c.id)??''),a.comment||'']);}
  const body='\uFEFF'+lines.map(row=>row.map(csvCell).join(',')).join('\r\n');const blob=new Blob([body],{type:'text/csv;charset=utf-8'});const u=URL.createObjectURL(blob);const link=document.createElement('a');link.href=u;link.download='評価結果_'+state.project.name.replace(/[\\/:*?"<>|]/g,'_')+'.csv';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);}
 $('login-form').addEventListener('submit',async e=>{e.preventDefault();const no=$('employee').value.trim();if(!/^\d{6}$/.test(no)){notify('職員番号は6桁の数字で入力してください。',true,true);return;}const btn=$('login-button');btn.disabled=true;notify('ログインしています…',false,true);try{const email=`staff${no}@rubric-login.example.com`;const data=await checked(client.auth.signInWithPassword({email,password:$('password').value}));notify('',false,true);await showHome(data.user);}catch(e){console.error(e);notify('ログインできませんでした。職員番号とパスワードを確認してください。',true,true);}finally{btn.disabled=false;}});
@@ -626,12 +626,12 @@ $('back-list').addEventListener('click',async()=>{try{await loadProjects();showO
 $('project-list').addEventListener('click',async e=>{
  const remove=e.target.closest('[data-delete-project]');
  if(remove){
-  if(!isProjectOwner(state.projects.find(p=>p.id===remove.dataset.deleteProject))){notify('プロジェクトの削除は作成者のみ可能です。',true);return;}
+  if(!isProjectOwner(state.projects.find(p=>p.id===remove.dataset.deleteProject))){notify('アサインメントの削除は作成者のみ可能です。',true);return;}
   const project=state.projects.find(p=>p.id===remove.dataset.deleteProject);
   if(!project)return;
-  const typed=prompt('プロジェクト「'+project.name+'」を完全に削除します。\n登録された評価対象・ルーブリック・評価結果も削除対象となり、元に戻せません。\n\n削除する場合は、プロジェクト名を正確に入力してください。');
+  const typed=prompt('アサインメント「'+project.name+'」を完全に削除します。\n登録された評価対象・ルーブリック・評価結果も削除対象となり、元に戻せません。\n\n削除する場合は、アサインメント名を正確に入力してください。');
   if(typed===null)return;
-  if(typed!==project.name){notify('入力されたプロジェクト名が一致しないため、削除しませんでした。',true);return;}
+  if(typed!==project.name){notify('入力されたアサインメント名が一致しないため、削除しませんでした。',true);return;}
   if(!confirm('最終確認：「'+project.name+'」を完全に削除しますか？この操作は取り消せません。'))return;
   remove.disabled=true;
   try{
@@ -643,19 +643,19 @@ $('project-list').addEventListener('click',async e=>{
     state.project=null;state.targets=[];state.criteria=[];state.assessments=[];state.scores=[];
     state.selectedTarget=null;state.selectedAssessment=null;state.selectedScores={};state.assignments=[];state.assignmentReady=false;state.resultsTargetId=null;state.dirty=false;state.editCriterionId=null;
     document.body.classList.remove('c2-mode');
-    $('top-project-name').textContent='評価プロジェクト';
+    $('top-project-name').textContent='評価アサインメント';
    }
    await loadProjects();showOnly('project-list-view');syncNav('settings');
    notify('「'+project.name+'」を削除しました。');
   }catch(err){
-   fail(err,'プロジェクトの削除');
+   fail(err,'アサインメントの削除');
    notify('削除に失敗しました。関連データの削除設定（外部キーのCASCADE）または管理者の削除権限を確認してください。'+(err?.message?' '+err.message:''),true);
   }finally{remove.disabled=false;}
   return;
  }
  const btn=e.target.closest('[data-project]');if(btn)openProject(btn.dataset.project);
 });
-$('project-form').addEventListener('submit',async e=>{e.preventDefault();const btn=e.target.querySelector('[type=submit]');btn.disabled=true;try{const p={name:$('project-name').value.trim(),target_kind:$('project-kind').value,scale_count:Number($('project-scale').value),created_by:state.user.id};if(!p.name)throw Error('名前を入力してください');const created=await checked(client.from('projects').insert(p).select('id').single());await loadProjects();e.target.reset();await openProject(created.id);notify('プロジェクトを作成しました。');}catch(err){fail(err,'プロジェクト作成');}finally{btn.disabled=false;}});
+$('project-form').addEventListener('submit',async e=>{e.preventDefault();const btn=e.target.querySelector('[type=submit]');btn.disabled=true;try{const p={name:$('project-name').value.trim(),target_kind:$('project-kind').value,scale_count:Number($('project-scale').value),created_by:state.user.id};if(!p.name)throw Error('名前を入力してください');const created=await checked(client.from('projects').insert(p).select('id').single());await loadProjects();e.target.reset();await openProject(created.id);notify('アサインメントを作成しました。');}catch(err){fail(err,'アサインメント作成');}finally{btn.disabled=false;}});
 $('targets-form').addEventListener('submit',async e=>{e.preventDefault();const lines=$('target-names').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);const names=[...new Set(lines)].filter(x=>!state.targets.some(t=>t.name===x));if(!names.length){notify('追加する新しい名前がありません。',true);return;}const btn=e.target.querySelector('button');btn.disabled=true;try{for(let i=0;i<names.length;i+=100)await checked(client.from('targets').insert(names.slice(i,i+100).map(name=>({project_id:state.project.id,name}))));$('target-names').value='';await reloadProject();notify(names.length+'件を追加しました。');}catch(err){fail(err,'評価対象の登録');}finally{btn.disabled=false;}});
 $('criterion-form').addEventListener('submit',async e=>{e.preventDefault();const btn=$('criterion-submit');btn.disabled=true;try{
  const count=Number(state.project.scale_count);
@@ -677,7 +677,7 @@ $('criterion-descriptors').addEventListener('change',e=>{
 $('save-rubric-scale').addEventListener('click',async()=>{
  const next=Number($('rubric-scale').value),previous=Number(state.project.scale_count);
  if(next===previous){notify('段階数は変更されていません。');return;}
- if(!canManageProject()){notify('このプロジェクトの編集権限が必要です。',true);$('rubric-scale').value=String(previous);return;}
+ if(!canManageProject()){notify('このアサインメントの編集権限が必要です。',true);$('rubric-scale').value=String(previous);return;}
  if(next<previous&&state.scores.some(s=>Number(s.score)>next)){
   notify('新しい段階数を超える保存済みの評価があります。評価結果を保護するため段階数は変更できません。',true);$('rubric-scale').value=String(previous);return;
  }
@@ -695,12 +695,12 @@ $('save-rubric-scale').addEventListener('click',async()=>{
 for(const b of document.querySelectorAll('[data-tab]'))b.addEventListener('click',()=>{notify('');setTab(b.dataset.tab);});
 document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.nav)));
 document.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.jump)));
-$('top-project-select').addEventListener('change',e=>{if(state.dirty&&!confirm('未保存の変更があります。別のプロジェクトに移動しますか？')){e.target.value=state.project?.id||'';return;}if(e.target.value)openProject(e.target.value,'targets');else navigate('settings');});
+$('top-project-select').addEventListener('change',e=>{if(state.dirty&&!confirm('未保存の変更があります。別のアサインメントに移動しますか？')){e.target.value=state.project?.id||'';return;}if(e.target.value)openProject(e.target.value,'targets');else navigate('settings');});
 $('target-search').addEventListener('input',renderTargets);
 $('targets-list').addEventListener('click',async e=>{
  const edit=e.target.closest('[data-target-edit]'),del=e.target.closest('[data-target-remove]');if(!edit&&!del)return;
  const id=(edit?.dataset.targetEdit||del?.dataset.targetRemove),t=state.targets.find(x=>x.id===id);if(!t)return;
- if(!canManageProject()){notify('このプロジェクトの編集権限が必要です。',true);return;}
+ if(!canManageProject()){notify('このアサインメントの編集権限が必要です。',true);return;}
  try{
  if(edit){const name=prompt('評価対象名を変更',t.name)?.trim();if(!name||name===t.name)return;await checked(client.from('targets').update({name}).eq('id',id).select('id').single());notify('評価対象名を更新しました。');}
  else{if(state.assessments.some(a=>a.target_id===id)){notify('評価記録がある対象は、誤削除防止のため削除できません。',true);return;}if(!confirm('「'+t.name+'」を削除しますか？'))return;await checked(client.from('targets').delete().eq('id',id).select('id').single());notify('評価対象を削除しました。');}
@@ -713,7 +713,7 @@ $('criteria-list').addEventListener('click',async e=>{
  const edit=e.target.closest('[data-edit-criterion]'),del=e.target.closest('[data-delete-criterion]');if(!edit&&!del)return;
  const id=edit?.dataset.editCriterion||del?.dataset.deleteCriterion,c=state.criteria.find(x=>x.id===id);if(!c)return;
  if(edit){editCriterion(id);return;}
- if(!canManageProject()){notify('このプロジェクトの編集権限が必要です。',true);return;}
+ if(!canManageProject()){notify('このアサインメントの編集権限が必要です。',true);return;}
  if(state.scores.some(x=>x.criterion_id===id)){notify('すでに評価記録がある項目は削除できません。',true);return;}
  if(!confirm('「'+c.title+'」を削除しますか？'))return;
  try{await checked(client.from('criteria').delete().eq('id',id).select('id').single());state.editCriterionId=null;await reloadProject();editCriterion();notify('評価項目を削除しました。');}catch(err){fail(err,'項目の削除');}
@@ -788,7 +788,7 @@ function csvColumns(header,aliases){
 }
 async function prepareCsv(kind){
  const file=$(kind+'-csv-file').files[0],projectId=state.project?.id;
- if(!projectId)throw Error('プロジェクトを選択してください。');
+ if(!projectId)throw Error('アサインメントを選択してください。');
  const raw=csvParse(await readCsvFile(file));if(raw.length<2)throw Error('ヘッダー行とデータ行が必要です。');
  const head=raw[0].map(h=>h.replace(/^\uFEFF/,'').trim()),data=raw.slice(1);let pending=[],skipped=0,preview=[];
  if(kind==='targets'){
@@ -818,9 +818,9 @@ async function prepareCsv(kind){
 }
 async function commitCsv(kind){
  const pending=csvPending[kind];
- if(!pending||pending.projectId!==state.project?.id)throw Error('プロジェクトが変更されています。CSVを選び直してください。');
+ if(!pending||pending.projectId!==state.project?.id)throw Error('アサインメントが変更されています。CSVを選び直してください。');
  if(!pending.rows.length)return;
- if(!canManageProject())throw Error('このプロジェクトの編集権限が必要です。');
+ if(!canManageProject())throw Error('このアサインメントの編集権限が必要です。');
  if(!confirm(pending.rows.length+'件を登録しますか？既存のデータは上書きしません。'))return;
  const table=kind==='targets'?'targets':'criteria',existing=new Set((kind==='targets'?state.targets:state.criteria).map(x=>kind==='targets'?x.name:x.title));
  const rows=pending.rows.filter(x=>!existing.has(kind==='targets'?x.name:x.title));let inserted=0;
@@ -971,9 +971,18 @@ $('assignment-save').addEventListener('click',async()=>{
 
 async function loadParticipants(){
  if(!state.project)return;
- try{state.members=await checked(client.from('project_members').select('project_id,user_id,role').eq('project_id',state.project.id));
- const ids=[state.project.created_by,...state.members.map(m=>m.user_id)];state.assignmentTeachers=await checked(client.from('profiles').select('id,display_name,employee_no,is_active').in('id',[...new Set(ids)]));renderParticipants();}
- catch(e){const p=$('participants-status');p.classList.remove('hidden');p.textContent='参加教員を取得できません：'+e.message;}
+ const status=$('participants-status');
+ try{
+  const [members,teachers]=await Promise.all([
+   checked(client.from('project_members').select('project_id,user_id,role').eq('project_id',state.project.id)),
+   checked(client.from('profiles').select('id,display_name,employee_no,is_active').eq('is_active',true).order('display_name').limit(1000))
+  ]);
+  state.members=members;state.availableTeachers=teachers;
+  const ids=new Set([state.project.created_by,...state.members.map(m=>m.user_id)]);
+  state.assignmentTeachers=teachers.filter(t=>ids.has(t.id));
+  status.classList.add('hidden');status.textContent='';
+  renderParticipants();
+ }catch(e){status.classList.remove('hidden');status.textContent='参加教員一覧の取得に失敗しました：'+(e?.message||'不明なエラー');$('participants-employee').innerHTML='<option value="">教員一覧を取得できません</option>';$('participants-add').disabled=true;}
 }
 function renderParticipants(){
  const owner=isProjectOwner();$('participants-tab-button').classList.toggle('hidden',!owner);
@@ -984,16 +993,23 @@ function renderParticipants(){
  return '<div class="participant-row"><div><strong>'+escapeHtml(t?.display_name||state.teacherNames[m.user_id]||'教員')+'</strong><small>'+escapeHtml(t?.employee_no||'')+'</small></div><select data-member-role="'+escapeHtml(m.user_id)+'"><option value="evaluator"'+(m.role==='evaluator'?' selected':'')+'>評価者</option><option value="editor"'+(m.role==='editor'?' selected':'')+'>共同編集者</option></select><button type="button" class="secondary small" data-remove-member="'+escapeHtml(m.user_id)+'">解除</button></div>';
  });
  list.innerHTML='<div class="participant-row"><strong>自分（作成者）</strong><span>管理者</span></div>'+rows.join('');
+ const excluded=new Set([state.project.created_by,...state.members.map(m=>m.user_id)]);
+ const available=state.availableTeachers.filter(t=>t.is_active&&!excluded.has(t.id));
+ const chooser=$('participants-employee'),prior=chooser.value;
+ const nameCounts=new Map();for(const t of state.availableTeachers)nameCounts.set(t.display_name,(nameCounts.get(t.display_name)||0)+1);
+ chooser.innerHTML='<option value="">教員を選択してください</option>'+available.map(t=>'<option value="'+escapeHtml(t.id)+'">'+escapeHtml(t.display_name)+(nameCounts.get(t.display_name)>1?'（'+escapeHtml(t.employee_no)+'）':'')+'</option>').join('');
+ if(available.some(t=>t.id===prior))chooser.value=prior;
+ chooser.disabled=!available.length;$('participants-add').disabled=!available.length;
+ if(!available.length)chooser.innerHTML='<option value="">追加できる教員はいません</option>';
 }
 $('participants-add-form').addEventListener('submit',async e=>{
  e.preventDefault();if(!isProjectOwner())return;
- const no=$('participants-employee').value.trim(),role=$('participants-role').value;
- if(!/^\d{6}$/.test(no)){notify('職員番号は6桁で入力してください。',true);return;}
+ const teacherId=$('participants-employee').value,role=$('participants-role').value;
+ if(!teacherId){notify('教員を選択してください。',true);return;}
  const btn=$('participants-add');btn.disabled=true;
  try{
-  const teachers=await checked(client.from('profiles').select('id,display_name,is_active').eq('employee_no',no).limit(1));
-  const t=teachers[0];
-  if(!t||!t.is_active)throw Error('利用中の教員が見つかりません。');
+  const t=state.availableTeachers.find(t=>t.id===teacherId&&t.is_active);
+  if(!t)throw Error('教員が見つかりません。一覧を更新してください。');
   if(t.id===state.project.created_by)throw Error('作成者は追加不要です。');
   if(state.members.some(m=>m.user_id===t.id))throw Error('この教員は参加済みです。');
   await checked(client.from('project_members').insert({project_id:state.project.id,user_id:t.id,role}));
