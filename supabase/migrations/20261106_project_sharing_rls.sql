@@ -76,7 +76,11 @@ alter table public.assessment_scores enable row level security;
 alter table public.project_teacher_criteria enable row level security;
 
 create policy project_read on public.projects for select to authenticated
- using(public.can_view_project(id));
+ using(public.is_active_teacher() and (
+   created_by = (select auth.uid())
+   or exists(select 1 from public.project_members m
+       where m.project_id=projects.id and m.user_id=(select auth.uid()))
+ ));
 create policy project_insert on public.projects for insert to authenticated
  with check(public.is_active_teacher() and created_by=auth.uid());
 create policy project_update on public.projects for update to authenticated
