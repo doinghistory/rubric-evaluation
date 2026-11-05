@@ -738,7 +738,7 @@ for(const kind of ['targets','criteria']){
  });
  $(kind+'-csv-template').addEventListener('click',()=>{
   if(kind==='targets')csvDownload('評価対象_見本.csv',[['対象名'],['1班'],['2班'],['3班']]);
-  else{const count=Number(state.project?.scale_count||5),levels=Array.from({length:count},(_,i)=>scoreLabel(count-i,count));csvDownload('ルーブリック_見本.csv',[['評価項目','説明',...levels],['情報の活用','資料を適切に使えているか',...levels.map((x,i)=>i===0?'根拠を組み合わせて適切に説明できる':i===Math.floor(count/2)?'資料を使って説明できる':i===count-1?'資料の活用に課題がある':'')]]);}
+  else{const count=Number(state.project?.scale_count||5),levels=Array.from({length:count},(_,i)=>scoreLabel(count-i,count));csvDownload('ルーブリック_見本（'+count+'段階）.csv',[['評価項目','説明',...levels],['情報の活用','資料を適切に使えているか',...levels.map((x,i)=>i===0?'根拠を組み合わせて適切に説明できる':i===Math.floor(count/2)?'資料を使って説明できる':i===count-1?'資料の活用に課題がある':'')]]);}
  });
 }
 
