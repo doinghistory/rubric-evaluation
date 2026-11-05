@@ -272,6 +272,7 @@ body.c2-mode #project-detail-view>.project-context{display:none}
 .descriptor-count{margin:10px 0 4px;color:#172e50;font-weight:700;font-size:12px}
 
 /* Results overview (A) -> teacher detail (B): navy/gold interface */
+.results-heading-actions{display:flex;gap:8px;flex-wrap:wrap}
 #tab-results .results-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:17px}
 #tab-results .results-heading h1{margin:0 0 5px;font-size:20px}
 #tab-results .results-heading p{margin:0;font-size:12px}
@@ -323,7 +324,7 @@ body.c2-mode #project-detail-view>.project-context{display:none}
 <div class="panel hidden" id="tab-criteria"><h1>ルーブリックの登録・編集</h1><div class="rubric-setup"><div><label for="rubric-scale">評価入力の選択肢数</label><select id="rubric-scale"><option value="3">3段階</option><option value="4">4段階</option><option value="5">5段階（A+・A・B・C+・C）</option></select></div><button type="button" id="save-rubric-scale" class="secondary">段階数を変更</button><p>評価の選択肢数と、文章で示す基準の数は別々に設定できます。例：5段階で評価し、そのうち3段階の評価基準文を表示。</p></div><div class="editor-grid"><div class="criterion-sidebar"><h2>ルーブリック項目 <span id="criterion-count" class="muted"></span></h2><div id="criteria-list"></div><button type="button" class="secondary" id="new-criterion">＋ 項目を追加</button></div><div class="criterion-editor"><h2 id="criterion-editor-title">評価項目の登録</h2><form id="criterion-form"><label for="criterion-title">観点名</label><input id="criterion-title" required placeholder="例：地歴の融合"><label for="criterion-description">説明（任意）</label><input id="criterion-description" placeholder="この観点で何を評価するか"><h3>評価基準（ルーブリック）</h3><p class="muted">各段階の「評価基準文を表示する」をオン・オフできます。評価の選択ボタンはすべて残ります。</p><div id="criterion-descriptors"></div><div id="descriptor-count" class="descriptor-count"></div><div class="actions between"><button type="button" class="secondary" id="cancel-criterion">キャンセル</button><button type="submit" class="gold-button" id="criterion-submit">✓ 保存</button></div></form></div></div></div>
 <div class="panel hidden" id="tab-evaluate"><div class="c2-toolbar"><label for="evaluate-target">評価対象グループ</label><select id="evaluate-target"></select><span class="c2-evaluator">評価者：<span id="evaluate-teacher-label"></span></span><button type="button" class="secondary small" id="expand-all">すべて展開</button><button type="button" class="secondary small" id="collapse-all">すべて折りたたむ</button></div><div id="evaluation-body"></div><div class="c2-footer"><label for="evaluate-comment">総合コメント（任意）</label><textarea id="evaluate-comment" placeholder="評価の根拠や気づきを入力"></textarea><div id="save-panel" class="save-panel"><div><div id="save-status" class="save-status" role="status" aria-live="polite">未保存</div><p class="save-help">再保存すると前の評価を上書きします。</p></div><button type="button" id="save-evaluation">評価を保存</button></div></div></div>
 <div class="panel hidden" id="tab-results">
-<div class="results-heading"><div><h1>評価一覧</h1><p class="muted">評価対象ごとの平均と、教員別の評価を確認できます。</p></div><button type="button" class="secondary" id="results-csv">⇩ CSV出力</button></div>
+<div class="results-heading"><div><h1>評価一覧</h1><p class="muted">評価対象ごとの平均と、教員別の評価を確認できます。</p></div><div class="results-heading-actions"><button type="button" class="secondary" id="results-refresh">↻ 最新の評価を取得</button><button type="button" class="secondary" id="results-csv">⇩ CSV出力</button></div></div>
 <div id="results-overview">
 <div class="results-filters"><label for="results-search">評価対象を検索<input id="results-search" type="search" placeholder="班名・生徒名で検索"></label><label for="results-status">評価状況<select id="results-status"><option value="all">すべて</option><option value="rated">評価あり</option><option value="unrated">未評価</option></select></label><span id="results-total" class="muted"></span></div>
 <div class="results-scroll"><table class="results-table"><thead id="results-table-head"></thead><tbody id="results-list"></tbody></table></div>
@@ -579,6 +580,7 @@ $('results-back').addEventListener('click',()=>{state.resultsTargetId=null;rende
 $('results-prev').addEventListener('click',()=>moveResultsTarget(-1));
 $('results-next').addEventListener('click',()=>moveResultsTarget(1));
 $('results-csv').addEventListener('click',exportCsv);
+$('results-refresh').addEventListener('click',async()=>{const btn=$('results-refresh');btn.disabled=true;try{await reloadProject();notify('最新の評価を読み込みました。');}catch(e){fail(e,'評価一覧の更新');}finally{btn.disabled=false;}});
 $('evaluate-target').addEventListener('change',e=>{if(state.dirty&&!confirm('未保存の変更があります。保存せずに評価対象を変更しますか？')){e.target.value=state.selectedTarget;return;}state.selectedTarget=e.target.value;state.expandedCriteria=new Set();renderEvaluation();});
 $('evaluation-body').addEventListener('click',e=>{
  const t=e.target.closest('[data-toggle]');
