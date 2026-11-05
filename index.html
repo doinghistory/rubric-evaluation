@@ -310,18 +310,30 @@ body.c2-mode #project-detail-view>.project-context{display:none}
 .results-comment-top{display:flex;justify-content:space-between;gap:10px}
 .results-comment p{margin:9px 0 2px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}
 @media(max-width:740px){#tab-results .results-heading{align-items:stretch;flex-direction:column}.results-filters input{min-width:150px}.results-detail-title{align-items:flex-start;flex-direction:column}.results-detail-nav{margin-left:0}.results-table th,.results-table td{padding:9px 10px}}
+
+.csv-import-box{margin:16px 0 20px;padding:17px;background:#fff;border:1px solid #d7dce4;border-radius:6px}
+.csv-import-box h2{font-size:15px;margin:0 0 7px}
+.csv-import-box p{margin:6px 0 11px}
+.csv-import-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.csv-import-row input[type=file]{min-width:190px;max-width:100%;flex:1;padding:7px;border:1px solid #d5dbe2}
+.csv-review{margin-top:14px;padding:12px;background:#fffbf2;border:1px solid #e6d39e;border-radius:5px}
+.csv-preview-scroll{max-height:220px;overflow:auto;margin:10px 0}
+.csv-preview-scroll table{width:100%;border-collapse:collapse;font-size:12px}
+.csv-preview-scroll th,.csv-preview-scroll td{padding:7px;border:1px solid #dbdee3;text-align:left;max-width:280px;overflow-wrap:anywhere}
+.csv-preview-scroll th{background:#f1f2f4}
+.side-links button{font-size:12px;white-space:nowrap;padding-left:10px}
 </style>
 </head>
 <body>
 <header>ルーブリック評価</header>
 <main>
 <section class="panel login" id="login-view"><h1>ログイン</h1><form id="login-form"><label for="employee">職員番号</label><input id="employee" type="text" inputmode="numeric" autocomplete="username" maxlength="6" pattern="[0-9]{6}" placeholder="6桁の職員番号" required><label for="password">パスワード</label><input id="password" type="password" autocomplete="current-password" required><div class="actions"><button id="login-button" type="submit">ログイン</button></div></form><div id="login-message" class="notice hidden" role="status" aria-live="polite"></div></section>
-<section id="app-view" class="hidden"><div class="work-shell"><aside class="side-nav"><div class="side-brand">▤ <span>ルーブリック評価</span></div><nav class="side-links" aria-label="メニュー"><button type="button" data-nav="home">⌂　ホーム</button><button type="button" data-nav="targets">♙　評価対象</button><button type="button" data-nav="criteria">▦　ルーブリック</button><button type="button" data-nav="evaluate">✎　評価入力</button><button type="button" data-nav="results">☷　評価一覧</button><button type="button" data-nav="export">⇩　集計・CSV</button><button type="button" data-nav="settings">⚙　プロジェクト</button></nav><div class="side-account"><div id="account"></div><button id="logout" type="button">ログアウト</button></div></aside><div class="work-main"><div class="work-topbar"><strong id="top-project-name">評価プロジェクト</strong><select id="top-project-select" aria-label="プロジェクトを選択"><option value="">プロジェクトを選択</option></select></div><div id="app-notice" class="notice hidden" role="status" aria-live="polite"></div>
+<section id="app-view" class="hidden"><div class="work-shell"><aside class="side-nav"><div class="side-brand">▤ <span>ルーブリック評価</span></div><nav class="side-links" aria-label="メニュー"><button type="button" data-nav="home">⌂　ホーム</button><button type="button" data-nav="targets">♙　評価対象の登録</button><button type="button" data-nav="criteria">▦　ルーブリック登録</button><button type="button" data-nav="evaluate">✎　評価入力</button><button type="button" data-nav="results">☷　評価一覧</button><button type="button" data-nav="export">⇩　集計・CSV</button><button type="button" data-nav="settings">⚙　プロジェクト</button></nav><div class="side-account"><div id="account"></div><button id="logout" type="button">ログアウト</button></div></aside><div class="work-main"><div class="work-topbar"><strong id="top-project-name">評価プロジェクト</strong><select id="top-project-select" aria-label="プロジェクトを選択"><option value="">プロジェクトを選択</option></select></div><div id="app-notice" class="notice hidden" role="status" aria-live="polite"></div>
 <div id="home-view" class="panel hidden"><h1>ホーム</h1><div class="home-actions"><button type="button" data-jump="evaluate">✎<strong>評価入力へ</strong></button><button type="button" data-jump="results">☷<strong>評価一覧</strong></button><button type="button" data-jump="export">⇩<strong>集計・CSV出力</strong></button></div><div class="home-grid"><div class="home-box"><h2>評価の進捗</h2><div id="home-progress"></div><div class="progress-track"><span id="home-progress-bar"></span></div></div><div class="home-box"><h2>最近の評価</h2><div id="home-recent"></div></div></div><div class="home-box"><h2>基本情報</h2><div class="home-stats" id="home-stats"></div></div></div><div id="project-list-view" class="panel"><div class="flex between"><h2>プロジェクト一覧</h2><button id="new-project" type="button">新規作成</button></div><div id="project-list" class="muted">読み込み中…</div></div>
 <div id="project-create-view" class="panel hidden"><div class="flex between"><h2>新しいプロジェクト</h2><button class="secondary small" type="button" data-back>戻る</button></div><form id="project-form"><label>プロジェクト名</label><input id="project-name" placeholder="例：探究活動 第1学期" maxlength="120" required><div class="grid"><div><label>評価対象</label><select id="project-kind"><option value="individual">個人</option><option value="group">グループ</option></select></div><div><label>評価段階</label><select id="project-scale"><option value="3">3段階</option><option value="4" selected>4段階</option><option value="5">5段階</option></select></div></div><div class="actions"><button type="submit">作成する</button></div></form></div>
 <div id="project-detail-view" class="hidden"><div class="panel project-context"><div class="flex between"><div><button id="back-list" type="button" class="secondary small">← 一覧へ</button><h1 id="detail-title" style="margin:14px 0 3px"></h1><div id="detail-subtitle" class="muted"></div></div><button id="export-csv" class="secondary" type="button">CSV出力</button></div></div><div class="tabs"><button type="button" data-tab="targets" class="active">評価対象</button><button type="button" data-tab="criteria">ルーブリック</button><button type="button" data-tab="evaluate">評価入力</button><button type="button" data-tab="results">評価一覧</button></div>
-<div class="panel" id="tab-targets"><h1>評価対象の登録・管理</h1><div class="subpanel"><h2>新しい評価対象の登録</h2><form id="targets-form"><label for="target-names">対象名（複数登録は1行に1件）</label><div class="target-form-row"><textarea id="target-names" placeholder="例：3班" required></textarea><button class="gold-button" type="submit">＋ 追加</button></div></form></div><div class="flex between list-heading"><h2>登録済みの評価対象 <span id="target-count" class="muted"></span></h2><input id="target-search" type="search" placeholder="名前で検索…" aria-label="評価対象を検索"></div><div class="table-wrap target-table"><table><thead><tr><th>No.</th><th>対象名</th><th>評価記録</th><th>操作</th></tr></thead><tbody id="targets-list"></tbody></table></div></div>
-<div class="panel hidden" id="tab-criteria"><h1>ルーブリックの登録・編集</h1><div class="rubric-setup"><div><label for="rubric-scale">評価入力の選択肢数</label><select id="rubric-scale"><option value="3">3段階</option><option value="4">4段階</option><option value="5">5段階（A+・A・B・C+・C）</option></select></div><button type="button" id="save-rubric-scale" class="secondary">段階数を変更</button><p>評価の選択肢数と、文章で示す基準の数は別々に設定できます。例：5段階で評価し、そのうち3段階の評価基準文を表示。</p></div><div class="editor-grid"><div class="criterion-sidebar"><h2>ルーブリック項目 <span id="criterion-count" class="muted"></span></h2><div id="criteria-list"></div><button type="button" class="secondary" id="new-criterion">＋ 項目を追加</button></div><div class="criterion-editor"><h2 id="criterion-editor-title">評価項目の登録</h2><form id="criterion-form"><label for="criterion-title">観点名</label><input id="criterion-title" required placeholder="例：地歴の融合"><label for="criterion-description">説明（任意）</label><input id="criterion-description" placeholder="この観点で何を評価するか"><h3>評価基準（ルーブリック）</h3><p class="muted">各段階の「評価基準文を表示する」をオン・オフできます。評価の選択ボタンはすべて残ります。</p><div id="criterion-descriptors"></div><div id="descriptor-count" class="descriptor-count"></div><div class="actions between"><button type="button" class="secondary" id="cancel-criterion">キャンセル</button><button type="submit" class="gold-button" id="criterion-submit">✓ 保存</button></div></form></div></div></div>
+<div class="panel" id="tab-targets"><h1>評価対象の登録・管理</h1><div class="subpanel"><h2>新しい評価対象の登録</h2><form id="targets-form"><label for="target-names">対象名（複数登録は1行に1件）</label><div class="target-form-row"><textarea id="target-names" placeholder="例：3班" required></textarea><button class="gold-button" type="submit">＋ 追加</button></div></form></div><div class="csv-import-box"><h2>CSVから一括登録</h2><p class="muted">「対象名」列のあるCSVを取り込みます。同名の評価対象は重複登録しません。</p><div class="csv-import-row"><input id="targets-csv-file" type="file" accept=".csv,text/csv"><button type="button" class="secondary small" id="targets-csv-template">見本CSVを保存</button><button type="button" class="gold-button" id="targets-csv-preview">内容を確認</button></div><div id="targets-csv-review" class="csv-review hidden" aria-live="polite"></div></div><div class="flex between list-heading"><h2>登録済みの評価対象 <span id="target-count" class="muted"></span></h2><input id="target-search" type="search" placeholder="名前で検索…" aria-label="評価対象を検索"></div><div class="table-wrap target-table"><table><thead><tr><th>No.</th><th>対象名</th><th>評価記録</th><th>操作</th></tr></thead><tbody id="targets-list"></tbody></table></div></div>
+<div class="panel hidden" id="tab-criteria"><h1>ルーブリックの登録・編集</h1><div class="rubric-setup"><div><label for="rubric-scale">評価入力の選択肢数</label><select id="rubric-scale"><option value="3">3段階</option><option value="4">4段階</option><option value="5">5段階（A+・A・B・C+・C）</option></select></div><button type="button" id="save-rubric-scale" class="secondary">段階数を変更</button><p>評価の選択肢数と、文章で示す基準の数は別々に設定できます。例：5段階で評価し、そのうち3段階の評価基準文を表示。</p></div><div class="csv-import-box"><h2>CSVからルーブリックを一括登録</h2><p class="muted">列名に「評価項目」「説明（任意）」と評価段階（例：A+・A・B・C+・C）を使用してください。文章がない段階は空欄にできます。</p><div class="csv-import-row"><input id="criteria-csv-file" type="file" accept=".csv,text/csv"><button type="button" class="secondary small" id="criteria-csv-template">見本CSVを保存</button><button type="button" class="gold-button" id="criteria-csv-preview">内容を確認</button></div><div id="criteria-csv-review" class="csv-review hidden" aria-live="polite"></div></div><div class="editor-grid"><div class="criterion-sidebar"><h2>ルーブリック項目 <span id="criterion-count" class="muted"></span></h2><div id="criteria-list"></div><button type="button" class="secondary" id="new-criterion">＋ 項目を追加</button></div><div class="criterion-editor"><h2 id="criterion-editor-title">評価項目の登録</h2><form id="criterion-form"><label for="criterion-title">観点名</label><input id="criterion-title" required placeholder="例：地歴の融合"><label for="criterion-description">説明（任意）</label><input id="criterion-description" placeholder="この観点で何を評価するか"><h3>評価基準（ルーブリック）</h3><p class="muted">各段階の「評価基準文を表示する」をオン・オフできます。評価の選択ボタンはすべて残ります。</p><div id="criterion-descriptors"></div><div id="descriptor-count" class="descriptor-count"></div><div class="actions between"><button type="button" class="secondary" id="cancel-criterion">キャンセル</button><button type="submit" class="gold-button" id="criterion-submit">✓ 保存</button></div></form></div></div></div>
 <div class="panel hidden" id="tab-evaluate"><div class="c2-toolbar"><label for="evaluate-target">評価対象グループ</label><select id="evaluate-target"></select><span class="c2-evaluator">評価者：<span id="evaluate-teacher-label"></span></span><button type="button" class="secondary small" id="expand-all">すべて展開</button><button type="button" class="secondary small" id="collapse-all">すべて折りたたむ</button></div><div id="evaluation-body"></div><div class="c2-footer"><label for="evaluate-comment">総合コメント（任意）</label><textarea id="evaluate-comment" placeholder="評価の根拠や気づきを入力"></textarea><div id="save-panel" class="save-panel"><div><div id="save-status" class="save-status" role="status" aria-live="polite">未保存</div><p class="save-help">再保存すると前の評価を上書きします。</p></div><button type="button" id="save-evaluation">評価を保存</button></div></div></div>
 <div class="panel hidden" id="tab-results">
 <div class="results-heading"><div><h1>評価一覧</h1><p class="muted">評価対象ごとの平均と、教員別の評価を確認できます。</p></div><div class="results-heading-actions"><button type="button" class="secondary" id="results-refresh">↻ 最新の評価を取得</button><button type="button" class="secondary" id="results-csv">⇩ CSV出力</button></div></div>
@@ -602,6 +614,99 @@ $('collapse-all').addEventListener('click',()=>{
 $('evaluate-comment').addEventListener('input',markDirty);
 $('save-evaluation').addEventListener('click',saveEvaluation);$('export-csv').addEventListener('click',exportCsv);
 (async()=>{try{const {data}=await client.auth.getUser();if(data.user)await showHome(data.user);}catch(err){console.error(err);showLogin();}})();
+
+/* CSV import: preview before any inserts, preserving existing entries */
+const csvPending={targets:null,criteria:null};
+function csvParse(text){
+ const value=String(text||'').replace(/^\uFEFF/,'');let out=[],row=[],field='',quoted=false;
+ for(let i=0;i<value.length;i++){const c=value[i];
+  if(quoted){if(c==='"'&&value[i+1]==='"'){field+='"';i++;}else if(c==='"'){quoted=false;}else field+=c;}
+  else if(c==='"'&&field.trim()===''){quoted=true;}
+  else if(c===','){row.push(field.trim());field='';}
+  else if(c==='\n'||c==='\r'){if(c==='\r'&&value[i+1]==='\n')i++;row.push(field.trim());if(row.some(x=>x!==''))out.push(row);row=[];field='';}
+  else field+=c;
+ }
+ if(quoted)throw Error('CSVの引用符が閉じられていません。');
+ row.push(field.trim());if(row.some(x=>x!==''))out.push(row);
+ return out;
+}
+async function readCsvFile(file){
+ if(!file)throw Error('CSVファイルを選択してください。');
+ if(file.size>2*1024*1024)throw Error('CSVファイルは2MB以下にしてください。');
+ const buffer=await file.arrayBuffer();
+ const utf8=new TextDecoder('utf-8',{fatal:false}).decode(buffer);
+ const sjis=new TextDecoder('shift_jis').decode(buffer);
+ return (utf8.match(/\uFFFD/g)||[]).length>(sjis.match(/\uFFFD/g)||[]).length?sjis:utf8;
+}
+function csvDownload(name,rows){
+ const safe=x=>'"'+String(x??'').replace(/"/g,'""')+'"';
+ const blob=new Blob(['\uFEFF'+rows.map(row=>row.map(safe).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});
+ const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=name;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function csvText(id,heading,pending,rows,skipped){
+ const el=$(id);el.classList.remove('hidden');
+ el.innerHTML='<h3>'+escapeHtml(heading)+'</h3><p>登録予定：<strong>'+pending.length+'件</strong> ／ 重複・空欄などによる除外：'+skipped+'件</p>'+
+ '<div class="csv-preview-scroll"><table><thead><tr>'+rows[0].map(x=>'<th>'+escapeHtml(x)+'</th>').join('')+'</tr></thead><tbody>'+rows.slice(1,6).map(row=>'<tr>'+row.map(x=>'<td>'+escapeHtml(x)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>'+
+ '<p class="muted">先頭の最大5件を表示しています。内容を確認してから登録してください。</p><button type="button" class="gold-button" data-csv-commit="'+(id==='targets-csv-review'?'targets':'criteria')+'"'+(pending.length?'':' disabled')+'>確認した内容を登録</button>';
+}
+function csvColumns(header,aliases){
+ return aliases.map(names=>header.findIndex(h=>names.some(n=>h.trim().toLowerCase()===n.toLowerCase())));
+}
+async function prepareCsv(kind){
+ const file=$(kind+'-csv-file').files[0],projectId=state.project?.id;
+ if(!projectId)throw Error('プロジェクトを選択してください。');
+ const raw=csvParse(await readCsvFile(file));if(raw.length<2)throw Error('ヘッダー行とデータ行が必要です。');
+ const head=raw[0].map(h=>h.replace(/^\uFEFF/,'').trim()),data=raw.slice(1);let pending=[],skipped=0,preview=[];
+ if(kind==='targets'){
+  const col=csvColumns(head,[['対象名','評価対象','名前','氏名','グループ名','生徒名','name']])[0];
+  if(col<0)throw Error('「対象名」列が見つかりません。見本CSVを確認してください。');
+  const used=new Set(state.targets.map(t=>t.name));
+  for(const cells of data){const name=(cells[col]||'').trim();if(!name||used.has(name)){skipped++;continue;}used.add(name);pending.push({project_id:projectId,name});}
+  preview=[['対象名'],...pending.map(x=>[x.name])];
+ }else{
+  const nameCol=csvColumns(head,[['評価項目','観点名','項目名','title']])[0],descCol=csvColumns(head,[['説明','説明（任意）','観点の説明','description']])[0];
+  if(nameCol<0)throw Error('「評価項目」列が必要です。');
+  const count=Number(state.project.scale_count);
+  const scoreCols=Array.from({length:count},(_,i)=>{const n=i+1;return head.findIndex(h=>h===scoreLabel(n,count)||h==='レベル'+n||h==='段階'+n||h===String(n));});
+  if(scoreCols.every(n=>n<0))throw Error('評価段階の列（例：A+・B・C）が見つかりません。');
+  const used=new Set(state.criteria.map(c=>c.title));
+  for(const cells of data){
+   const title=(cells[nameCol]||'').trim();
+   if(!title||used.has(title)){skipped++;continue;}
+   const descriptors=scoreCols.map(i=>i>=0?(cells[i]||'').trim():'');
+   if(descriptors.every(x=>!x)){skipped++;continue;}
+   used.add(title);pending.push({project_id:projectId,title,description:descCol>=0?(cells[descCol]||'').trim():'',descriptors,sort_order:state.criteria.length+pending.length+1});
+  }
+  preview=[['評価項目',...Array.from({length:count},(_,i)=>scoreLabel(count-i,count))],...pending.map(p=>[p.title,...p.descriptors.slice().reverse()])];
+ }
+ csvPending[kind]={projectId,rows:pending};
+ csvText(kind+'-csv-review',kind==='targets'?'評価対象の取り込み確認':'ルーブリックの取り込み確認',pending,preview,skipped);
+}
+async function commitCsv(kind){
+ const pending=csvPending[kind];
+ if(!pending||pending.projectId!==state.project?.id)throw Error('プロジェクトが変更されています。CSVを選び直してください。');
+ if(!pending.rows.length)return;
+ if(state.profile?.role!=='admin')throw Error('CSVからの登録は管理者のみ可能です。');
+ if(!confirm(pending.rows.length+'件を登録しますか？既存のデータは上書きしません。'))return;
+ const table=kind==='targets'?'targets':'criteria',existing=new Set((kind==='targets'?state.targets:state.criteria).map(x=>kind==='targets'?x.name:x.title));
+ const rows=pending.rows.filter(x=>!existing.has(kind==='targets'?x.name:x.title));let inserted=0;
+ for(let i=0;i<rows.length;i+=100){await checked(client.from(table).insert(rows.slice(i,i+100)));inserted+=rows.slice(i,i+100).length;}
+ csvPending[kind]=null;$(kind+'-csv-review').classList.add('hidden');$(kind+'-csv-file').value='';
+ await reloadProject();notify(inserted+'件をCSVから登録しました。');
+}
+for(const kind of ['targets','criteria']){
+ $(kind+'-csv-preview').addEventListener('click',async()=>{try{await prepareCsv(kind);}catch(e){fail(e,'CSVの確認');}});
+ $(kind+'-csv-file').addEventListener('change',()=>{csvPending[kind]=null;$(kind+'-csv-review').classList.add('hidden');});
+ $(kind+'-csv-review').addEventListener('click',async e=>{
+  const btn=e.target.closest('[data-csv-commit]');if(!btn)return;btn.disabled=true;
+  try{await commitCsv(kind);}catch(err){fail(err,'CSVの登録');}finally{btn.disabled=false;}
+ });
+ $(kind+'-csv-template').addEventListener('click',()=>{
+  if(kind==='targets')csvDownload('評価対象_見本.csv',[['対象名'],['1班'],['2班'],['3班']]);
+  else{const count=Number(state.project?.scale_count||5),levels=Array.from({length:count},(_,i)=>scoreLabel(count-i,count));csvDownload('ルーブリック_見本.csv',[['評価項目','説明',...levels],['情報の活用','資料を適切に使えているか',...levels.map((x,i)=>i===0?'根拠を組み合わせて適切に説明できる':i===Math.floor(count/2)?'資料を使って説明できる':i===count-1?'資料の活用に課題がある':'')]]);}
+ });
+}
+
 </script>
 </body>
 </html>
