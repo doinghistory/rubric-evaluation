@@ -198,20 +198,81 @@ body.c2-mode #save-panel.saved,body.c2-mode #save-panel.dirty{background:transpa
 body.c2-mode #save-evaluation{height:50px;min-height:50px;width:100%;min-width:0;background:#b58a20;color:white;border:1px solid #ae831e;border-radius:6px;font-size:17px;font-weight:700;padding:8px 12px}
 body.c2-mode #save-evaluation:hover{background:#9e771c}
 @media(max-width:800px){body.c2-mode .c2-toolbar{flex-wrap:wrap}body.c2-mode .c2-evaluator{display:none}body.c2-mode .rubric-row{flex-direction:column;align-items:stretch;padding:8px 10px}body.c2-mode .rubric-picks button{width:auto;flex:1}body.c2-mode .rubric-detail-grid{grid-template-columns:1fr}body.c2-mode .rubric-detail-option{min-height:0;border-right:0;border-bottom:1px solid #cdd3dc}body.c2-mode .c2-footer{grid-template-columns:1fr;gap:8px}body.c2-mode .c2-footer label,body.c2-mode #evaluate-comment,body.c2-mode #save-panel{grid-column:1;grid-row:auto}}
+
+/* Unified administration UI */
+body{background:#f6f6f5}header{display:none}main{max-width:none;margin:0;padding:0}
+#login-view{margin-top:9vh}#app-view{width:100%}
+.work-shell{display:grid;grid-template-columns:198px minmax(0,1fr);min-height:100vh}
+.side-nav{background:#0b284d;color:#fff;display:flex;flex-direction:column;position:sticky;top:0;align-self:start;height:100vh}
+.side-brand{padding:19px 15px;border-bottom:1px solid #304764;font-size:14px;font-weight:700;color:#f2f5fa;white-space:nowrap}
+.side-links{display:flex;flex-direction:column;gap:4px;padding:15px 8px;flex:1}
+.side-links button{text-align:left;width:100%;border:0;background:transparent;color:#fff;min-height:43px;padding:10px 12px;font-size:13px;font-weight:700}
+.side-links button:hover{background:#234365}
+.side-links button.active,.side-links button.active:hover{background:#edbf50;color:#102846}
+.side-account{border-top:1px solid #304764;padding:12px;color:#dbe4f1;font-size:11px}
+.side-account button{margin-top:7px;background:transparent;border:1px solid #7589a3;color:#fff;width:100%;font-size:11px}
+.work-main{padding:0 24px 40px;width:100%;min-width:0;max-width:1600px;margin:0 auto}
+.work-topbar{height:60px;display:flex;gap:15px;align-items:center;justify-content:space-between;background:#fff;border-bottom:1px solid #dce0e5;margin:0 -24px 16px;padding:8px 24px}
+#top-project-name{font-size:15px;color:#1c3453}#top-project-select{width:min(440px,50%);height:38px;font-size:13px}
+.work-main .panel{background:#fff;border:1px solid #d7dce3;border-radius:7px;box-shadow:0 2px 8px #1027420b;padding:20px;margin-bottom:14px}
+#project-detail-view>.tabs{display:none!important}#project-detail-view>.project-context{display:none}
+.home-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0 22px}
+.home-actions button{background:#fff;border:1px solid #d0d7e0;color:#163258;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:26px;min-height:106px}
+.home-actions button strong{font-size:14px}
+.home-actions button:hover{background:#fff8e8;border-color:#c9a041}
+.home-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(230px,1fr);gap:13px}
+.home-box{border:1px solid #d9dee6;padding:15px;border-radius:6px;margin-bottom:14px}
+.home-box h2{border-bottom:1px solid #e4e6e9;padding-bottom:10px}
+.progress-track{height:12px;background:#e0e3e8;border-radius:7px;overflow:hidden;margin-top:14px}
+.progress-track span{height:100%;width:0;display:block;background:#c3982e}
+.home-stats{display:flex;gap:12px;flex-wrap:wrap}
+.home-stat{padding:12px 21px;background:#fafafa;border:1px solid #e2e4e9;border-radius:5px}
+.home-stat strong{display:block;font-size:23px;color:#172e50}
+.subpanel{background:#fafafa;border:1px solid #dfe2e6;padding:16px;border-radius:6px;margin:15px 0 18px}
+.target-form-row{display:flex;align-items:end;gap:12px}.target-form-row textarea{flex:1;min-height:45px;height:46px}
+.gold-button{background:#b68c22;border-color:#a67b1b;color:#fff;font-weight:700}
+.gold-button:hover{background:#9b751a}
+.list-heading{margin-bottom:10px}.list-heading h2{margin:0}
+#target-search{width:250px;max-width:50%;min-height:34px}
+.target-table table{min-width:580px}.target-table th{background:#eff1f4}
+.target-table td{vertical-align:middle}.target-table td:first-child{min-width:58px;width:65px}
+.target-table td:last-child{width:165px;white-space:nowrap}.target-table button{min-height:30px;margin-right:5px}
+.editor-grid{display:grid;grid-template-columns:minmax(200px,30%) minmax(0,1fr);border:1px solid #d9dce3;border-radius:5px;overflow:hidden;margin-top:15px}
+.criterion-sidebar{background:#fbfbfc;padding:14px;border-right:1px solid #d9dce3}
+.criterion-editor{padding:18px;background:#fff}.criterion-sidebar h2{font-size:14px}
+.criterion-item{display:flex;gap:4px;align-items:center;background:#fff;border:1px solid #e0e3e8;border-radius:4px;margin:5px 0}
+.criterion-item.active{background:#f8e6b8;border-color:#dabc73}
+.criterion-item button{border:0;background:transparent;color:#1b2b42;text-align:left;font-size:12px}
+.criterion-item button:first-child{flex:1;min-height:40px}
+.criterion-item button.mini-remove{color:#a33c37;padding:5px}
+#new-criterion{margin-top:12px;width:100%}
+#criterion-descriptors{display:grid;gap:9px}
+.descriptor-row{display:grid;grid-template-columns:100px minmax(0,1fr);border:1px solid #dce0e6;border-radius:5px;overflow:hidden}
+.descriptor-row label{padding:13px 8px;background:#eef0f3;text-align:center;font-weight:700;margin:0;font-size:12px}
+.descriptor-row textarea{border:0;min-height:75px;resize:vertical;font-size:13px}
+#criterion-form .actions{margin-top:20px}
+body.c2-mode main{margin:0;padding:0;max-width:none}
+body.c2-mode .work-shell{display:grid;grid-template-columns:198px minmax(0,1fr)}
+body.c2-mode .side-nav{display:flex}
+body.c2-mode .work-main{padding:0 24px 40px;max-width:1600px}
+body.c2-mode .work-topbar{display:flex}
+body.c2-mode #project-detail-view>.project-context{display:none}
+@media(max-width:850px){.work-shell,body.c2-mode .work-shell{grid-template-columns:65px minmax(0,1fr)}.side-brand span{display:none}.side-brand{font-size:20px}.side-links button{font-size:0;text-align:center;padding:11px 3px}.side-links button::first-letter{font-size:20px}.side-account{font-size:0}.side-account button{font-size:9px;padding:3px}.work-main,body.c2-mode .work-main{padding:0 12px 30px}.work-topbar{margin:0 -12px 12px;padding:8px 12px}.editor-grid{grid-template-columns:1fr}.criterion-sidebar{border-right:0;border-bottom:1px solid #ddd}.home-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.home-actions{grid-template-columns:1fr}.home-actions button{min-height:55px;flex-direction:row}.target-form-row{flex-direction:column;align-items:stretch}}
 </style>
 </head>
 <body>
 <header>ルーブリック評価</header>
 <main>
 <section class="panel login" id="login-view"><h1>ログイン</h1><form id="login-form"><label for="employee">職員番号</label><input id="employee" type="text" inputmode="numeric" autocomplete="username" maxlength="6" pattern="[0-9]{6}" placeholder="6桁の職員番号" required><label for="password">パスワード</label><input id="password" type="password" autocomplete="current-password" required><div class="actions"><button id="login-button" type="submit">ログイン</button></div></form><div id="login-message" class="notice hidden" role="status" aria-live="polite"></div></section>
-<section id="app-view" class="hidden"><div class="panel"><div class="flex between"><div><h1 style="margin-bottom:5px">評価プロジェクト</h1><div class="muted" id="account"></div></div><button type="button" id="logout" class="secondary">ログアウト</button></div></div><div id="app-notice" class="notice hidden" role="status" aria-live="polite"></div>
-<div id="project-list-view" class="panel"><div class="flex between"><h2>プロジェクト一覧</h2><button id="new-project" type="button">新規作成</button></div><div id="project-list" class="muted">読み込み中…</div></div>
+<section id="app-view" class="hidden"><div class="work-shell"><aside class="side-nav"><div class="side-brand">▤ <span>ルーブリック評価</span></div><nav class="side-links" aria-label="メニュー"><button type="button" data-nav="home">⌂　ホーム</button><button type="button" data-nav="targets">♙　評価対象</button><button type="button" data-nav="criteria">▦　ルーブリック</button><button type="button" data-nav="evaluate">✎　評価入力</button><button type="button" data-nav="results">☷　評価一覧</button><button type="button" data-nav="export">⇩　集計・CSV</button><button type="button" data-nav="settings">⚙　プロジェクト</button></nav><div class="side-account"><div id="account"></div><button id="logout" type="button">ログアウト</button></div></aside><div class="work-main"><div class="work-topbar"><strong id="top-project-name">評価プロジェクト</strong><select id="top-project-select" aria-label="プロジェクトを選択"><option value="">プロジェクトを選択</option></select></div><div id="app-notice" class="notice hidden" role="status" aria-live="polite"></div>
+<div id="home-view" class="panel hidden"><h1>ホーム</h1><div class="home-actions"><button type="button" data-jump="evaluate">✎<strong>評価入力へ</strong></button><button type="button" data-jump="results">☷<strong>評価一覧</strong></button><button type="button" data-jump="export">⇩<strong>集計・CSV出力</strong></button></div><div class="home-grid"><div class="home-box"><h2>評価の進捗</h2><div id="home-progress"></div><div class="progress-track"><span id="home-progress-bar"></span></div></div><div class="home-box"><h2>最近の評価</h2><div id="home-recent"></div></div></div><div class="home-box"><h2>基本情報</h2><div class="home-stats" id="home-stats"></div></div></div><div id="project-list-view" class="panel"><div class="flex between"><h2>プロジェクト一覧</h2><button id="new-project" type="button">新規作成</button></div><div id="project-list" class="muted">読み込み中…</div></div>
 <div id="project-create-view" class="panel hidden"><div class="flex between"><h2>新しいプロジェクト</h2><button class="secondary small" type="button" data-back>戻る</button></div><form id="project-form"><label>プロジェクト名</label><input id="project-name" placeholder="例：探究活動 第1学期" maxlength="120" required><div class="grid"><div><label>評価対象</label><select id="project-kind"><option value="individual">個人</option><option value="group">グループ</option></select></div><div><label>評価段階</label><select id="project-scale"><option value="3">3段階</option><option value="4" selected>4段階</option><option value="5">5段階</option></select></div></div><div class="actions"><button type="submit">作成する</button></div></form></div>
-<div id="project-detail-view" class="hidden"><div class="panel"><div class="flex between"><div><button id="back-list" type="button" class="secondary small">← 一覧へ</button><h1 id="detail-title" style="margin:14px 0 3px"></h1><div id="detail-subtitle" class="muted"></div></div><button id="export-csv" class="secondary" type="button">CSV出力</button></div></div><div class="tabs"><button type="button" data-tab="targets" class="active">評価対象</button><button type="button" data-tab="criteria">ルーブリック</button><button type="button" data-tab="evaluate">評価入力</button><button type="button" data-tab="results">評価一覧</button></div>
-<div class="panel" id="tab-targets"><h2>評価対象の登録</h2><p class="muted">生徒名・グループ名を1行に1件ずつ入力してください。</p><form id="targets-form"><label for="target-names">名前（複数行可）</label><textarea id="target-names" placeholder="生徒A&#10;生徒B&#10;生徒C" required></textarea><div class="actions"><button type="submit">追加する</button></div></form><h3>登録済み</h3><div id="targets-list" class="muted"></div></div>
-<div class="panel hidden" id="tab-criteria"><h2>ルーブリックの作成</h2><p class="muted">各評価段階の基準を記入します。1が最も低い段階、最大値が最も高い段階です。</p><form id="criterion-form"><label for="criterion-title">評価項目</label><input id="criterion-title" required placeholder="例：資料の活用"><label for="criterion-description">説明（任意）</label><input id="criterion-description" placeholder="評価の観点を記入"><div id="criterion-descriptors" class="grid"></div><div class="actions"><button type="submit">評価項目を追加</button></div></form><h3>登録済みの評価項目</h3><div id="criteria-list" class="muted"></div></div>
+<div id="project-detail-view" class="hidden"><div class="panel project-context"><div class="flex between"><div><button id="back-list" type="button" class="secondary small">← 一覧へ</button><h1 id="detail-title" style="margin:14px 0 3px"></h1><div id="detail-subtitle" class="muted"></div></div><button id="export-csv" class="secondary" type="button">CSV出力</button></div></div><div class="tabs"><button type="button" data-tab="targets" class="active">評価対象</button><button type="button" data-tab="criteria">ルーブリック</button><button type="button" data-tab="evaluate">評価入力</button><button type="button" data-tab="results">評価一覧</button></div>
+<div class="panel" id="tab-targets"><h1>評価対象の登録・管理</h1><div class="subpanel"><h2>新しい評価対象の登録</h2><form id="targets-form"><label for="target-names">対象名（複数登録は1行に1件）</label><div class="target-form-row"><textarea id="target-names" placeholder="例：3班" required></textarea><button class="gold-button" type="submit">＋ 追加</button></div></form></div><div class="flex between list-heading"><h2>登録済みの評価対象 <span id="target-count" class="muted"></span></h2><input id="target-search" type="search" placeholder="名前で検索…" aria-label="評価対象を検索"></div><div class="table-wrap target-table"><table><thead><tr><th>No.</th><th>対象名</th><th>評価記録</th><th>操作</th></tr></thead><tbody id="targets-list"></tbody></table></div></div>
+<div class="panel hidden" id="tab-criteria"><h1>ルーブリックの登録・編集</h1><div class="editor-grid"><div class="criterion-sidebar"><h2>ルーブリック項目 <span id="criterion-count" class="muted"></span></h2><div id="criteria-list"></div><button type="button" class="secondary" id="new-criterion">＋ 項目を追加</button></div><div class="criterion-editor"><h2 id="criterion-editor-title">評価項目の登録</h2><form id="criterion-form"><label for="criterion-title">観点名</label><input id="criterion-title" required placeholder="例：地歴の融合"><label for="criterion-description">説明（任意）</label><input id="criterion-description" placeholder="この観点で何を評価するか"><h3>評価基準（ルーブリック）</h3><div id="criterion-descriptors"></div><div class="actions between"><button type="button" class="secondary" id="cancel-criterion">キャンセル</button><button type="submit" class="gold-button" id="criterion-submit">✓ 保存</button></div></form></div></div></div>
 <div class="panel hidden" id="tab-evaluate"><div class="c2-toolbar"><label for="evaluate-target">評価対象グループ</label><select id="evaluate-target"></select><span class="c2-evaluator">評価者：<span id="evaluate-teacher-label"></span></span><button type="button" class="secondary small" id="expand-all">すべて展開</button><button type="button" class="secondary small" id="collapse-all">すべて折りたたむ</button></div><div id="evaluation-body"></div><div class="c2-footer"><label for="evaluate-comment">総合コメント（任意）</label><textarea id="evaluate-comment" placeholder="評価の根拠や気づきを入力"></textarea><div id="save-panel" class="save-panel"><div><div id="save-status" class="save-status" role="status" aria-live="polite">未保存</div><p class="save-help">再保存すると前の評価を上書きします。</p></div><button type="button" id="save-evaluation">評価を保存</button></div></div></div>
-<div class="panel hidden" id="tab-results"><h2>評価一覧</h2><p class="muted">評価者ごとの記録を表示します。全件をダウンロードするには「CSV出力」を押してください。</p><div id="results-list"></div></div></div></section>
+<div class="panel hidden" id="tab-results"><h2>評価一覧</h2><p class="muted">評価者ごとの記録を表示します。全件をダウンロードするには「CSV出力」を押してください。</p><div id="results-list"></div></div></div></div></section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
