@@ -348,7 +348,7 @@ button.project-delete-button:hover{background:#fff0f1;color:#8d1d25}
 <div class="criterion-editor"><h2>教員の追加</h2><form id="staff-create-form">
 <label for="staff-number">職員番号（6桁）</label><input id="staff-number" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required placeholder="例：123456">
 <label for="staff-name">教員名</label><input id="staff-name" maxlength="80" required placeholder="教員名">
-<label for="staff-password">初期パスワード（12文字以上）</label><input id="staff-password" type="password" minlength="12" maxlength="128" autocomplete="new-password" required>
+<label for="staff-password">初期パスワード（5文字以上）</label><input id="staff-password" type="password" minlength="5" maxlength="128" autocomplete="new-password" required>
 <label for="staff-role">権限</label><select id="staff-role"><option value="teacher">教員</option><option value="admin">管理者</option></select>
 <p class="muted">パスワードは管理者が安全な方法で本人に伝えてください。初期パスワードは画面上に保存しません。</p>
 <div class="actions"><button id="staff-create-button" type="submit" class="gold-button">教員を登録</button></div></form></div>
@@ -792,7 +792,7 @@ $('staff-reload').addEventListener('click',async e=>{const button=e.currentTarge
 $('staff-create-form').addEventListener('submit',async e=>{
  e.preventDefault();if(state.profile?.role!=='admin')return;
  const employee_no=$('staff-number').value.trim(),display_name=$('staff-name').value.trim(),password=$('staff-password').value,role=$('staff-role').value;
- if(!/^\d{6}$/.test(employee_no)||!display_name||password.length<12){notify('職員番号・教員名・パスワード（12文字以上）を確認してください。',true);return;}
+ if(!/^\d{6}$/.test(employee_no)||!display_name||password.length<5){notify('職員番号・教員名・パスワード（5文字以上）を確認してください。',true);return;}
  const button=$('staff-create-button');button.disabled=true;
  try{await staffRequest({action:'create',employee_no,display_name,password,role});$('staff-create-form').reset();notify('教員を登録しました。初期パスワードを本人に安全に伝えてください。');await loadStaff();}
  catch(err){fail(err,'教員の登録');}finally{button.disabled=false;}
