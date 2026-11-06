@@ -373,13 +373,31 @@ body.read-only-project #tab-criteria [data-edit-criterion]{cursor:default}
 <header>ルーブリック評価</header>
 <main>
 <section class="panel login" id="login-view"><h1>ログイン</h1><form id="login-form"><label for="employee">職員番号</label><input id="employee" type="text" inputmode="numeric" autocomplete="username" maxlength="6" pattern="[0-9]{6}" placeholder="6桁の職員番号" required><label for="password">パスワード</label><input id="password" type="password" autocomplete="current-password" required><div class="actions"><button id="login-button" type="submit">ログイン</button></div></form><div id="login-message" class="notice hidden" role="status" aria-live="polite"></div></section>
-<section id="app-view" class="hidden"><div class="work-shell"><aside class="side-nav"><div class="side-brand">▤ <span>ルーブリック評価</span></div><nav class="side-links" aria-label="メニュー"><button type="button" data-nav="home">⌂　ホーム</button><button type="button" data-nav="targets">♙　評価対象の登録</button><button type="button" data-nav="criteria">▦　ルーブリック登録</button><button type="button" data-nav="assignments" id="assignment-nav" class="hidden">☷　評価担当の設定</button><button type="button" data-nav="participants" id="participants-nav" class="hidden">♧　参加教員の設定</button><button type="button" data-nav="evaluate">✎　評価入力</button><button type="button" data-nav="results">☷　評価一覧</button><button type="button" data-nav="export">⇩　集計・CSV</button><button type="button" data-nav="settings">⚙　アサインメント</button><button type="button" data-nav="staff" id="staff-nav" class="hidden">♙　教員管理</button></nav><div class="side-account"><div id="account"></div><button id="logout" type="button">ログアウト</button></div></aside><div class="work-main"><div class="work-topbar"><strong id="top-project-name">評価アサインメント</strong><select id="top-project-select" aria-label="アサインメントを選択"><option value="">アサインメントを選択</option></select></div><div id="app-notice" class="notice hidden" role="status" aria-live="polite"></div>
-<div id="home-view" class="panel hidden"><h1>ホーム</h1><div class="home-box my-projects"><div class="flex between"><h2>マイアサインメント</h2><button type="button" class="secondary small" data-jump="settings">一覧・新規作成</button></div><div id="home-project-list"></div></div><div class="home-actions"><button type="button" data-jump="evaluate">✎<strong>評価入力へ</strong></button><button type="button" data-jump="results">☷<strong>評価一覧</strong></button><button type="button" data-jump="export">⇩<strong>集計・CSV出力</strong></button></div><div class="home-grid"><div class="home-box"><h2>評価の進捗</h2><div id="home-progress"></div><div class="progress-track"><span id="home-progress-bar"></span></div></div><div class="home-box"><h2>最近の評価</h2><div id="home-recent"></div></div></div><div class="home-box"><h2>基本情報</h2><div class="home-stats" id="home-stats"></div></div></div><div id="staff-view" class="panel hidden">
+<section id="app-view" class="hidden"><div class="work-shell"><aside class="side-nav"><div class="side-brand">▤ <span>ルーブリック評価</span></div><nav class="side-links" aria-label="メニュー"><button type="button" data-nav="home">⌂　ホーム</button><button type="button" data-nav="targets">♙　評価対象の登録</button><button type="button" data-nav="criteria">▦　ルーブリック登録</button><button type="button" data-nav="assignments" id="assignment-nav" class="hidden">☷　評価担当の設定</button><button type="button" data-nav="participants" id="participants-nav" class="hidden">♧　参加教員の設定</button><button type="button" data-nav="evaluate">✎　評価入力</button><button type="button" data-nav="results">☷　評価一覧</button><button type="button" data-nav="export">⇩　集計・CSV</button><button type="button" data-nav="settings">⚙　アサインメント</button><button type="button" data-nav="staff" id="staff-nav" class="hidden">♙　教員管理</button><button type="button" data-nav="account">⚙　パスワード変更</button></nav><div class="side-account"><div id="account"></div><button id="logout" type="button">ログアウト</button></div></aside><div class="work-main"><div class="work-topbar"><strong id="top-project-name">評価アサインメント</strong><select id="top-project-select" aria-label="アサインメントを選択"><option value="">アサインメントを選択</option></select></div><div id="app-notice" class="notice hidden" role="status" aria-live="polite"></div>
+<div id="home-view" class="panel hidden"><h1>ホーム</h1><div class="home-box my-projects"><div class="flex between"><h2>マイアサインメント</h2><button type="button" class="secondary small" data-jump="settings">一覧・新規作成</button></div><div id="home-project-list"></div></div><div class="home-actions"><button type="button" data-jump="evaluate">✎<strong>評価入力へ</strong></button><button type="button" data-jump="results">☷<strong>評価一覧</strong></button><button type="button" data-jump="export">⇩<strong>集計・CSV出力</strong></button></div><div class="home-grid"><div class="home-box"><h2>評価の進捗</h2><div id="home-progress"></div><div class="progress-track"><span id="home-progress-bar"></span></div></div><div class="home-box"><h2>最近の評価</h2><div id="home-recent"></div></div></div><div class="home-box"><h2>基本情報</h2><div class="home-stats" id="home-stats"></div></div></div><div id="account-view" class="panel hidden"><h1>パスワード変更</h1><p class="muted">ログイン中の自分のパスワードを変更します。職員番号や評価データは変更されません。</p>
+<form id="account-password-form" style="max-width:440px">
+<label for="account-current-password">現在のパスワード</label><input id="account-current-password" type="password" autocomplete="current-password" required>
+<label for="account-new-password">新しいパスワード（12文字以上）</label><input id="account-new-password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required>
+<label for="account-confirm-password">新しいパスワード（確認）</label><input id="account-confirm-password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required>
+<p class="muted">推測されにくいパスワードを設定してください。変更後は新しいパスワードでログインします。</p>
+<button id="account-change-button" type="submit" class="gold-button">パスワードを変更</button></form>
+</div>
+<div id="staff-view" class="panel hidden">
 <h1>教員アカウント管理</h1><p class="muted">管理者専用。職員番号でログインする教員を追加・利用停止できます。</p>
 <div id="staff-service-message" class="notice">「更新」でSupabaseとの接続を確認できます。</div>
 <div class="editor-grid staff-editor-grid">
 <div class="criterion-sidebar"><h2>教員一覧</h2><button class="secondary small" id="staff-reload" type="button">↻ 更新</button><div id="staff-list" class="staff-list muted">教員管理機能の接続を確認してください。</div></div>
-<div class="criterion-editor"><h2>教員の追加</h2><form id="staff-create-form">
+<div class="criterion-editor">
+<div id="staff-reset-container" class="hidden" style="margin-bottom:26px;padding-bottom:24px;border-bottom:1px solid #dbe2e9">
+<h2 id="staff-reset-label">登録済み教員のパスワード再設定</h2>
+<p class="muted">登録済みの教員は新規登録せず、ここで再設定します。</p>
+<form id="staff-reset-form"><input type="hidden" id="staff-reset-id">
+<label for="staff-reset-password">新しい仮パスワード（12文字以上）</label>
+<input type="password" id="staff-reset-password" minlength="12" maxlength="128" autocomplete="new-password" required>
+<label for="staff-reset-confirm">仮パスワード（確認）</label>
+<input type="password" id="staff-reset-confirm" minlength="12" maxlength="128" autocomplete="new-password" required>
+<div class="actions"><button type="submit" class="gold-button" id="staff-reset-button">再設定する</button><button type="button" class="secondary" id="staff-reset-cancel">キャンセル</button></div></form></div>
+<h2>教員の追加</h2><form id="staff-create-form">
 <label for="staff-number">職員番号（6桁）</label><input id="staff-number" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required placeholder="例：123456">
 <label for="staff-name">教員名</label><input id="staff-name" maxlength="80" required placeholder="教員名">
 <label for="staff-password">初期パスワード（5文字以上）</label><input id="staff-password" type="password" minlength="5" maxlength="128" autocomplete="new-password" required>
@@ -421,7 +439,7 @@ const state={user:null,profile:null,projects:[],project:null,targets:[],criteria
 const escapeHtml=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function notify(s,error=false,login=false){const el=$(login?'login-message':'app-notice');el.textContent=s;el.classList.toggle('hidden',!s);el.classList.toggle('error',error);if(error)console.warn(s);}
 function fail(e,context='操作'){console.error(e);notify(context+'に失敗しました。'+(e?.message?' '+e.message:''),true);}
-function showOnly(view){for(const id of ['home-view','staff-view','project-list-view','project-create-view','project-detail-view'])$(id).classList.toggle('hidden',id!==view);if(view!=='project-detail-view')document.body.classList.remove('c2-mode');}
+function showOnly(view){for(const id of ['home-view','account-view','staff-view','project-list-view','project-create-view','project-detail-view'])$(id).classList.toggle('hidden',id!==view);if(view!=='project-detail-view')document.body.classList.remove('c2-mode');}
 function showLogin(){state.user=null;state.profile=null;state.memberships=[];state.membershipReady=false;$('app-view').classList.add('hidden');$('login-view').classList.remove('hidden');$('password').value='';}
 async function checked(promise){const x=await promise;if(x.error)throw x.error;return x.data;}
 async function showHome(user){
@@ -530,7 +548,7 @@ function renderEvaluation(){
 
 function syncNav(tab){document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===tab));}
 function setTab(tab){if((tab==='assignments'&&!canManageProject())||(tab==='participants'&&!isProjectOwner()))return false;if(state.tab==='evaluate'&&tab!=='evaluate'&&state.dirty&&!confirm('未保存の変更があります。保存せずに移動しますか？'))return false;state.tab=tab;showOnly('project-detail-view');document.body.classList.toggle('c2-mode',tab==='evaluate');for(const b of document.querySelectorAll('[data-tab]'))b.classList.toggle('active',b.dataset.tab===tab);for(const id of ['targets','criteria','assignments','participants','evaluate','results'])$('tab-'+id).classList.toggle('hidden',id!==tab);if(tab==='results')renderResults();if(tab==='assignments')void loadAssignmentTeachers();if(tab==='participants')void loadParticipants();syncNav(tab);return true;}
-function navigate(tab){if(state.dirty&&state.tab==='evaluate'&&tab!=='evaluate'&&!confirm('未保存の変更があります。移動すると変更内容は失われます。'))return;if(tab==='export'){if(state.project)exportCsv();return;}if(tab==='settings'){document.body.classList.remove('c2-mode');showOnly('project-list-view');syncNav('settings');return;}if(tab==='staff'){if(state.profile?.role!=='admin')return;document.body.classList.remove('c2-mode');showOnly('staff-view');syncNav('staff');void loadStaff();return;}if((tab==='assignments'&&!canManageProject())||(tab==='participants'&&!isProjectOwner())){notify('このアサインメントの管理権限が必要です。',true);return;}if(tab==='home'){document.body.classList.remove('c2-mode');showOnly('home-view');renderHome();syncNav('home');return;}if(!state.project){showOnly('project-list-view');syncNav('settings');return;}setTab(tab);}
+function navigate(tab){if(state.dirty&&state.tab==='evaluate'&&tab!=='evaluate'&&!confirm('未保存の変更があります。移動すると変更内容は失われます。'))return;if(tab==='export'){if(state.project)exportCsv();return;}if(tab==='settings'){document.body.classList.remove('c2-mode');showOnly('project-list-view');syncNav('settings');return;}if(tab==='account'){document.body.classList.remove('c2-mode');showOnly('account-view');syncNav('account');return;}if(tab==='staff'){if(state.profile?.role!=='admin')return;document.body.classList.remove('c2-mode');showOnly('staff-view');syncNav('staff');void loadStaff();return;}if((tab==='assignments'&&!canManageProject())||(tab==='participants'&&!isProjectOwner())){notify('このアサインメントの管理権限が必要です。',true);return;}if(tab==='home'){document.body.classList.remove('c2-mode');showOnly('home-view');renderHome();syncNav('home');return;}if(!state.project){showOnly('project-list-view');syncNav('settings');return;}setTab(tab);}
 function resultsData(){
  const scoreByAssessment=new Map();
  for(const s of state.scores){
@@ -861,7 +879,7 @@ async function loadStaff(){
  try{
   const data=await staffRequest({action:'list'});
   const list=data?.staff||[];
-  $('staff-list').innerHTML=list.length?list.map(t=>'<div class="staff-row"><strong>'+escapeHtml(t.display_name)+'</strong><span>'+escapeHtml(t.employee_no)+'</span><span class="staff-state">'+(t.is_active?'利用中':'停止中')+'</span><button type="button" class="secondary small" data-staff-toggle="'+escapeHtml(t.id)+'" data-staff-active="'+(t.is_active?'true':'false')+'"'+(t.id===state.user.id?' disabled':'')+'>'+(t.is_active?'利用停止':'再開')+'</button></div>').join(''):'教員はまだ登録されていません。';
+  $('staff-list').innerHTML=list.length?list.map(t=>'<div class="staff-row"><strong>'+escapeHtml(t.display_name)+'</strong><span>'+escapeHtml(t.employee_no)+'</span><span class="staff-state">'+(t.is_active?'利用中':'停止中')+'</span><button type="button" class="secondary small" data-staff-reset="'+escapeHtml(t.id)+'" data-staff-name="'+escapeHtml(t.display_name)+'"'+(!t.is_active?' disabled':'')+'>パスワード再設定</button><button type="button" class="secondary small" data-staff-toggle="'+escapeHtml(t.id)+'" data-staff-active="'+(t.is_active?'true':'false')+'"'+(t.id===state.user.id?' disabled':'')+'>'+(t.is_active?'利用停止':'再開')+'</button></div>').join(''):'教員はまだ登録されていません。';
   $('staff-service-message').textContent='教員管理機能に接続しています。';
  }catch(err){$('staff-service-message').textContent='教員管理機能が利用できません：'+err.message;$('staff-list').textContent='一覧を読み込めませんでした。';}
 }
@@ -1030,6 +1048,43 @@ $('participants-list').addEventListener('click',async e=>{
   await checked(client.from('project_members').delete().eq('project_id',state.project.id).eq('user_id',button.dataset.removeMember).select('user_id').single());
   await loadParticipants();notify('参加を解除しました。');
  }catch(err){fail(err,'参加解除');}finally{button.disabled=false;}
+});
+
+$('staff-reset-cancel').addEventListener('click',()=>{$('staff-reset-form').reset();$('staff-reset-container').classList.add('hidden');});
+$('staff-list').addEventListener('click',e=>{
+ const b=e.target.closest('[data-staff-reset]');if(!b)return;
+ $('staff-reset-id').value=b.dataset.staffReset;
+ $('staff-reset-label').textContent=b.dataset.staffName+'さんのパスワード再設定';
+ $('staff-reset-form').reset();$('staff-reset-id').value=b.dataset.staffReset;
+ $('staff-reset-container').classList.remove('hidden');
+ $('staff-reset-password').focus();
+});
+$('staff-reset-form').addEventListener('submit',async e=>{
+ e.preventDefault();
+ if(state.profile?.role!=='admin')return;
+ const id=$('staff-reset-id').value,password=$('staff-reset-password').value;
+ if(password.length<12||password!==$('staff-reset-confirm').value){notify('12文字以上のパスワードを一致させて入力してください。',true);return;}
+ if(!confirm('選択した教員のパスワードを再設定しますか？'))return;
+ const b=$('staff-reset-button');b.disabled=true;
+ try{
+  await staffRequest({action:'reset-password',id,password});
+  $('staff-reset-form').reset();$('staff-reset-container').classList.add('hidden');
+  notify('パスワードを再設定しました。本人に安全な方法で伝えてください。');
+ }catch(err){fail(err,'パスワードの再設定');}finally{b.disabled=false;}
+});
+$('account-password-form').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const current=$('account-current-password').value,next=$('account-new-password').value,confirmNew=$('account-confirm-password').value;
+ if(next.length<12||next!==confirmNew){notify('12文字以上の新しいパスワードを一致させて入力してください。',true);return;}
+ if(current===next){notify('現在と異なるパスワードを設定してください。',true);return;}
+ const b=$('account-change-button');b.disabled=true;
+ try{
+  const {error:checkError}=await client.auth.signInWithPassword({email:state.user.email,password:current});
+  if(checkError)throw Error('現在のパスワードが正しくありません。');
+  const {error}=await client.auth.updateUser({password:next});
+  if(error)throw error;
+  $('account-password-form').reset();notify('パスワードを変更しました。次回から新しいパスワードでログインしてください。');
+ }catch(err){fail(err,'パスワードの変更');}finally{b.disabled=false;}
 });
 </script>
 </body>
