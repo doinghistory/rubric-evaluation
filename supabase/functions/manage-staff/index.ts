@@ -83,6 +83,24 @@ Deno.serve(async (req: Request) => {
     return response({ ok: true, id: userId }, 201);
   }
 
+  if (action === 'reset-password') {
+    const id = String(payload.id || '');
+    const password = typeof payload.password === 'string' ? payload.password : '';
+    if (!/^[0-9a-f-]{36}$/i.test(id) || password.length < 12 || password.length > 128) {
+      return response({ error: '教員と新しいパスワード（12文字以上）を確認してください。' }, 400);
+    }
+    const { data: target, error: targetError } = await adminClient.from('profiles')
+      .select('id,is_active').eq('id', id).maybeSingle();
+    if (targetError || !target) return response({ error: '対象の教員が見つかりません。' }, 404);
+    if (target.is_active !== true) return response({ error: '利用停止中の教員のパスワードは再設定できません。' }, 403);
+    const { error: updateError } = await adminClient.auth.admin.updateUserById(id, { password });
+    if (updateError) {
+      console.error('Auth password reset failed:', updateError.message);
+      return response({ error: 'パスワードの再設定に失敗しました。' }, 500);
+    }
+    return response({ ok: true });
+  }
+
   if (action === 'set-active') {
     const id = String(payload.id || '');
     if (!/^[0-9a-f-]{36}$/i.test(id) || typeof payload.is_active !== 'boolean') return response({ error: '指定された教員情報が不正です。' }, 400);
