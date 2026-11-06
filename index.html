@@ -377,8 +377,8 @@ body.read-only-project #tab-criteria [data-edit-criterion]{cursor:default}
 <div id="home-view" class="panel hidden"><h1>ホーム</h1><div class="home-box my-projects"><div class="flex between"><h2>マイアサインメント</h2><button type="button" class="secondary small" data-jump="settings">一覧・新規作成</button></div><div id="home-project-list"></div></div><div class="home-actions"><button type="button" data-jump="evaluate">✎<strong>評価入力へ</strong></button><button type="button" data-jump="results">☷<strong>評価一覧</strong></button><button type="button" data-jump="export">⇩<strong>集計・CSV出力</strong></button></div><div class="home-grid"><div class="home-box"><h2>評価の進捗</h2><div id="home-progress"></div><div class="progress-track"><span id="home-progress-bar"></span></div></div><div class="home-box"><h2>最近の評価</h2><div id="home-recent"></div></div></div><div class="home-box"><h2>基本情報</h2><div class="home-stats" id="home-stats"></div></div></div><div id="account-view" class="panel hidden"><h1>パスワード変更</h1><p class="muted">ログイン中の自分のパスワードを変更します。職員番号や評価データは変更されません。</p>
 <form id="account-password-form" style="max-width:440px">
 <label for="account-current-password">現在のパスワード</label><input id="account-current-password" type="password" autocomplete="current-password" required>
-<label for="account-new-password">新しいパスワード（12文字以上）</label><input id="account-new-password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required>
-<label for="account-confirm-password">新しいパスワード（確認）</label><input id="account-confirm-password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required>
+<label for="account-new-password">新しいパスワード（5文字以上）</label><input id="account-new-password" type="password" autocomplete="new-password" minlength="5" maxlength="128" required>
+<label for="account-confirm-password">新しいパスワード（確認）</label><input id="account-confirm-password" type="password" autocomplete="new-password" minlength="5" maxlength="128" required>
 <p class="muted">推測されにくいパスワードを設定してください。変更後は新しいパスワードでログインします。</p>
 <button id="account-change-button" type="submit" class="gold-button">パスワードを変更</button></form>
 </div>
@@ -392,10 +392,10 @@ body.read-only-project #tab-criteria [data-edit-criterion]{cursor:default}
 <h2 id="staff-reset-label">登録済み教員のパスワード再設定</h2>
 <p class="muted">登録済みの教員は新規登録せず、ここで再設定します。</p>
 <form id="staff-reset-form"><input type="hidden" id="staff-reset-id">
-<label for="staff-reset-password">新しい仮パスワード（12文字以上）</label>
-<input type="password" id="staff-reset-password" minlength="12" maxlength="128" autocomplete="new-password" required>
+<label for="staff-reset-password">新しい仮パスワード（5文字以上）</label>
+<input type="password" id="staff-reset-password" minlength="5" maxlength="128" autocomplete="new-password" required>
 <label for="staff-reset-confirm">仮パスワード（確認）</label>
-<input type="password" id="staff-reset-confirm" minlength="12" maxlength="128" autocomplete="new-password" required>
+<input type="password" id="staff-reset-confirm" minlength="5" maxlength="128" autocomplete="new-password" required>
 <div class="actions"><button type="submit" class="gold-button" id="staff-reset-button">再設定する</button><button type="button" class="secondary" id="staff-reset-cancel">キャンセル</button></div></form></div>
 <h2>教員の追加</h2><form id="staff-create-form">
 <label for="staff-number">職員番号（6桁）</label><input id="staff-number" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required placeholder="例：123456">
@@ -1063,7 +1063,7 @@ $('staff-reset-form').addEventListener('submit',async e=>{
  e.preventDefault();
  if(state.profile?.role!=='admin')return;
  const id=$('staff-reset-id').value,password=$('staff-reset-password').value;
- if(password.length<12||password!==$('staff-reset-confirm').value){notify('12文字以上のパスワードを一致させて入力してください。',true);return;}
+ if(password.length<5||password!==$('staff-reset-confirm').value){notify('5文字以上のパスワードを一致させて入力してください。',true);return;}
  if(!confirm('選択した教員のパスワードを再設定しますか？'))return;
  const b=$('staff-reset-button');b.disabled=true;
  try{
@@ -1075,7 +1075,7 @@ $('staff-reset-form').addEventListener('submit',async e=>{
 $('account-password-form').addEventListener('submit',async e=>{
  e.preventDefault();
  const current=$('account-current-password').value,next=$('account-new-password').value,confirmNew=$('account-confirm-password').value;
- if(next.length<12||next!==confirmNew){notify('12文字以上の新しいパスワードを一致させて入力してください。',true);return;}
+ if(next.length<5||next!==confirmNew){notify('5文字以上の新しいパスワードを一致させて入力してください。',true);return;}
  if(current===next){notify('現在と異なるパスワードを設定してください。',true);return;}
  const b=$('account-change-button');b.disabled=true;
  try{
