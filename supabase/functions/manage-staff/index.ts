@@ -86,8 +86,8 @@ Deno.serve(async (req: Request) => {
   if (action === 'reset-password') {
     const id = String(payload.id || '');
     const password = typeof payload.password === 'string' ? payload.password : '';
-    if (!/^[0-9a-f-]{36}$/i.test(id) || password.length < 12 || password.length > 128) {
-      return response({ error: '教員と新しいパスワード（12文字以上）を確認してください。' }, 400);
+    if (!/^[0-9a-f-]{36}$/i.test(id) || password.length < 5 || password.length > 128) {
+      return response({ error: '教員と新しいパスワード（5文字以上）を確認してください。' }, 400);
     }
     const { data: target, error: targetError } = await adminClient.from('profiles')
       .select('id,is_active').eq('id', id).maybeSingle();
